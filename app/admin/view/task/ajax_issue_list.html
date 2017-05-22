@@ -1,0 +1,102 @@
+{foreach buglist as $k=>$v}
+<tr id="ab">
+	<td>{$v.renwid}</td>
+	<td style=" vertical-align: middle !important;"><a href="{:url('admin/Task/issue_one',array('renwid'=>$v.renwid))}" title="{$v.renwbt}">{$v.renwbt|subtext=9}</a>
+	</td>
+	<td style=" vertical-align: middle !important;" class="">{foreach ztlist as $k1=>$v1}{if
+		$v1.daimid==$v.youxjb}{$v1.daimmc}{/if}{/foreach}
+	</td>
+	<td style=" vertical-align: middle !important;" class="">{foreach ztlist as $k1=>$v1}{if
+		$v1.daimid==$v.zhuangt}{$v1.daimmc}{/if}{/foreach}
+	</td>
+	<td style=" vertical-align: middle !important;" class="">{foreach ztlist as $k1=>$v1}{if
+		$v1.daimid==$v.biaoz}{if $v1.daimid == 26}<span style="color:red;">已关闭</span>{else}{$v1.daimmc}{/if}{/if}{/foreach}
+	</td>
+	<td style=" vertical-align: middle !important;" class="">{foreach ztlist as $k1=>$v1}{if
+		$v1.daimid==$v.jied}{$v1.daimmc}{/if}{/foreach}
+	</td>
+	<td style=" vertical-align: middle !important;" class="">{foreach ztlist as $k1=>$v1}{if
+		$v1.daimid==$v.renwlx}{$v1.daimmc}{/if}{/foreach}
+	</td>
+	<td style=" vertical-align: middle !important;" class="">{foreach admin_list as $k1=>$v1}{if
+		$v1.admin_id==$v.fabry}{$v1.admin_realname}{/if}{/foreach}
+	</td>
+	<td style=" vertical-align: middle !important;" class="">{foreach admin_list as $k1=>$v1}{if
+		$v1.admin_id==$v.jiedfzr}{$v1.admin_realname}{/if}{/foreach}
+	</td>
+	<td class="" style=" vertical-align: middle !important;">{$v.fabsj|msubstr=0,10,'utf-8',false}</td>
+	<td class="" style=" vertical-align: middle !important;">{$v.jiedyjwcsj|msubstr=0,10,'utf-8',false}</td>
+	<td class="" style=" vertical-align: middle !important;">{$v.yaoqwcsj|msubstr=0,10,'utf-8',false}</td>
+	<td class="" style=" vertical-align: middle !important;">
+		{foreach cp_list as $k1=>$v1}
+		{if $v.chanp_id != 0 && $v1.chanpid == $v.chanp_id}{$v1.chanpmc}{/if}
+		{/foreach}
+	</td>
+	<td class="" style=" vertical-align: middle !important;">
+		{foreach xm_list as $k1=>$v1}
+		{if $v.xiangm_id != 0 && $v1.xiangmid == $v.xiangm_id}{$v1.xiangmmc}{/if}
+		{/foreach}
+	</td>
+	<td class="" style=" vertical-align: middle !important;">
+		{if $v.mk_name != ''}{$v.mk_name|subtext=18}{/if}
+	</td>
+</tr>
+{/foreach}
+<tr id="page">
+	<td colspan="15" align="right">{$page}</td>
+</tr>
+<!--隐藏总问题数目等，动态改变问题-->
+<input xx="{$sum}" type="hidden"/>
+<input xx="{$jj}" type="hidden"/>
+<input xx="{$wjj}" type="hidden"/>
+<!--按照合适的值，自动改变颜色-->
+<script>
+	//获取当前日期格式：xxxx-xx-xx
+	function show(){
+		var mydate = new Date();
+		var str = mydate.getTime();
+		return str;
+	}
+	var trList = $("#ajax-data").children("tr");
+	for (var i=0;i<trList.length;i++) {
+		var tdArr = trList.eq(i).find("td");
+		var lz = tdArr.eq(3).text();//为当前状态
+		var jb = tdArr.eq(2).text();//为级别
+		var yqsj = tdArr.eq(10).text();//为预期完成时间
+		var gdsj = tdArr.eq(11).text();//为要求完成时间
+        var time_end = new Date(gdsj).getTime();//为要求完成时间戳
+        var b = '流转';
+		var a = '最高';
+		var c = '很高';
+		var d = '高';
+		lz = $.trim(lz);  //过滤掉空格
+		jb = $.trim(jb);  //过滤掉空格
+		yqsj = $.trim(yqsj);  //过滤掉空格
+		gdsj = $.trim(gdsj);  //过滤掉空格
+		if(lz == b){
+			tdArr.eq(3).css('color','blue');
+		}
+		if(a == jb || c == jb || d == jb){  //高、很高、最高显示为红色
+			tdArr.eq(2).css('color','red');
+		}
+		if(yqsj>gdsj){ //如果预期时间大于规定时间显示红色
+			tdArr.eq(10).css('color','red');
+			tdArr.eq(11).css('color','red');
+		}
+		//console.log(time_end);
+		//如果当前日期大于完成日期显示红色
+		var new_time = show();
+		if(new_time>time_end){
+			tdArr.eq(10).css('color','red');
+			tdArr.eq(11).css('color','red');
+		}
+	}
+	//双击table数据跳出一个弹框
+	$("#ajax-data tr").dblclick(function (e) {
+        var content = $(this).find('td').eq(0).text(); //获取双击的id
+		console.log(content);
+        if (content != ""){
+            window.location.href = "{$Think.const.ADMIN_URL}"+'task/issue_one/renwid/'+content;
+        }
+    });
+</script>

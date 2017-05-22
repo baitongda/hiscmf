@@ -1,0 +1,33 @@
+{foreach zrw_log as $k=>$v}
+<tr>
+	<td>{$k+1}</td>
+	<td style=" vertical-align: middle !important;"><a href="{:url('admin/Task/issue_one',array('renwid'=>$v.renwid))}" title="{$v.zirwid}">{foreach $buglist as $k1=>$v1}{if
+		$v1.renwid==$v.renwid}{$v1.renwbt|subtext=20}{/if}{/foreach}</a>
+	</td>
+    <td style=" vertical-align: middle !important;" class="">{foreach buglist as $k1=>$v1}{if
+        $v1.renwid==$v.renwid}{if $v1.rw_state==26}<span style="color:red;">已关闭</span>{else}未解决{/if}{/if}{/foreach}
+    </td>
+	<!--子任务标志-->
+	<td style=" vertical-align: middle !important;">{foreach $zirwbzlist as $k1=>$v1}{if
+		$v1.daimid==$v.biaoz}{if $v1.daimmc == '未完成'}<span style="color:red;">{$v1.daimmc}</span>{else}{$v1.daimmc}{/if}{/if}{/foreach}
+	</td>
+	<!--问题的状态-->
+	<td style=" vertical-align: middle !important;" class="">{foreach ztlist as $k1=>$v1}{if
+		$v1.daimid==$v.zhuangt}{if $v1.daimmc == '关闭任务'}<span style="color:red;">{$v1.daimmc}</span>{else}{$v1.daimmc}{/if}{/if}{/foreach}
+	</td>
+	<td>{$v.jiessj}</td>
+	<td>{$v.jiedsjwcsj}</td>
+	<td>{$v.jiedgs}</td>
+	<td>
+		<div class="action-buttons">
+			<a class="green sugreply-btn1" data-id="{$v.zirwid}" href="{:url('admin/Task/gs_edit')}" data-rel="tooltip" title="修改工时" data-original-title="修改工时">
+				<i class="ace-icon fa fa-pencil bigger-150"></i>
+			</a>
+		</div>
+	</td>
+</tr>
+{/foreach}
+
+<tr id="page">
+	<td colspan="15" align="right">{$page}</td>
+</tr>

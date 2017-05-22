@@ -1,0 +1,54 @@
+{foreach weeklog as $k=>$v}
+<tr ondblclick="tankuang(this);">
+	<td style=" vertical-align: middle !important;">{$v.id}</td>
+	<td style=" vertical-align: middle !important;">{$v.bum}</td>
+	<td style=" vertical-align: middle !important;" class="">{foreach admin_list as $k1=>$v1}{if
+		$v1.admin_id==$v.admin_id}{$v1.admin_realname}{/if}{/foreach}
+	</td>
+	<!--<td style=" vertical-align: middle !important;" class="">{if $v.zb_type == 1}周报{/if}</td>-->
+	<td style=" vertical-align: middle !important;" class="" title="{$v.zb_content}">{$v.zb_content|subtext=17}</td>
+	<td style=" vertical-align: middle !important;" class="" title="{$v.zb_next_content}">{$v.zb_next_content|subtext=17}</td>
+	<td style=" vertical-align: middle !important;" class="" title="{$v.zb_issue}">{$v.zb_issue|subtext=12}</td>
+	<td style=" vertical-align: middle !important;" class="" title="{$v.sj_comment}">{$v.sj_comment|subtext=9}</td>
+	<td style=" vertical-align: middle !important;" class="" title="{$v.up_file}"><a href="__ROOT__{$v.up_file}">{$v.up_file|subtext=9}</a></td>
+	<td class="" style=" vertical-align: middle !important;">{:date('Y-m-d',$v.addtime)}</td>
+	<td style=" vertical-align: middle !important;" class="">{if $v.tijiaobz == '1'}已提交{else}<span style="color: red;">未提交</span>{/if}</td>
+	<td style=" vertical-align: middle !important;">
+		<!--data-href是word导出的链接，这样写是为了当点击查看周报或者修改周报的时候，在yfcmf.js里面处理把这个word导出的链接赋值到导出word的href上.在yfcmf.js搜索dc_href即可找到-->
+		{if $v.tijiaobz == '1'}
+		<div class="action-buttons">
+			<a href="{:url('admin/Weeklog/weeklog_edit')}" data-id="{$v.id}" class="green runedit-btn" data-rel="tooltip" data-href="{:url('admin/Weeklog/weeklog_word',array('id'=>$v.id))}" title="查看" data-data="chakan" data-original-title="查看">
+				<span class="green"><i class="ace-icon fa fa-eye bigger-130"></i></span>
+			</a>
+			<a href="{:url('admin/Weeklog/weeklog_word',array('id'=>$v.id))}" data-rel="tooltip" title="下载周报" data-original-title="下载周报">
+				<span class="green"><i class="ace-icon fa fa-file-word-o bigger-120"></i></span>
+			</a>
+		</div>
+		{else}
+		<div class="action-buttons">
+			<a href="{:url('admin/Weeklog/weeklog_edit')}" data-id="{$v.id}" class="green runedit-btn" data-rel="tooltip" data-href="{:url('admin/Weeklog/weeklog_word',array('id'=>$v.id))}" title="修改" data-data="edit" data-original-title="修改">
+				<span class="green"><i class="ace-icon fa fa-pencil bigger-140"></i></span>
+			</a>
+			<a href="{:url('admin/Weeklog/weeklog_word',array('id'=>$v.id))}" data-rel="tooltip" title="下载周报" data-original-title="下载周报">
+				<span class="green"><i class="ace-icon fa fa-file-word-o bigger-120"></i></span>
+			</a>
+			<a class="red confirm-rst-url-btn" data-info="你确定要删除吗？" href="{:url('admin/Weeklog/weeklog_del',array('id'=>$v.id))}" title="删除">
+				<i class="ace-icon fa fa-trash-o bigger-140"></i>
+			</a>
+		</div>
+		{/if}
+	</td>
+</tr>
+{/foreach}
+<tr id="page">
+	<td colspan="15" align="right">{$page}</td>
+</tr>
+<script>
+    //双击td数据跳出一个弹框
+	function tankuang(e) {
+		var id = $(e).find('td').eq(10).find('a').eq(0).attr('data-id'); //获取双击的data-id的值
+		//console.log(e);
+        //模拟点击编辑事件
+        $(e).find('td').eq(10).find('a').eq(0).click();
+    }
+</script>

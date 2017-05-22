@@ -1,0 +1,1133 @@
+{extend name="admin@public/base" /}
+{block name="main-content"}
+<div class="page-content">
+
+    <!--主题-->
+    <div class="page-header">
+        <h1>
+            您当前操作
+            <small>
+                <i class="ace-icon fa fa-angle-double-right"></i>
+                查看任务、操作任务
+            </small>
+        </h1>
+    </div>
+    <header id="top"></header>
+    <a href="#foot1" class="back-to-top" style="font-size: 20px;"> 跳到尾部 </a>
+    <a href="javascript:history.back(-1);" class="back-to-top" style="font-size: 20px;"> 返回上一页 </a>
+    <!--隐藏发送问题id-->
+    <input type="hidden" value="{$renwid}" name="renwid"/>
+    <div class="row" id="table_pig">
+        <!--问题内容-->
+        <div class="col-md-6">
+            <div class="form-group panel panel-info">
+                <div class="panel-heading">
+                    <h4 class="panel-title">任务编号：#{$bug_list['renwid']}</h4>
+                </div>
+                <div class="panel-body" style="font-size: 14px;font-weight:900;padding:0px;">{$bug_list['renwnr']}</div>
+                <table class="table table-bordered table-condensed">
+                    <tbody>
+                    <tr>
+                        <td style="width:25%;font-weight:600;">提交用户</td>
+                        <td style="width:25%">{foreach admin_list as $k=>$v} {if $v['admin_id'] == $bug_list['fabry']}{$v['admin_realname']}{/if}{/foreach}
+                        </td>
+                        <td style="width:25%;font-weight:600;">发布时间</td>
+                        <td style="width:25%">{$bug_list['fabsj']}</td>
+                    </tr>
+                    <tr>
+                        <td style="width:25%;font-weight:600;">阶段负责人</td>
+                        <td style="width:25%">{foreach admin_list as $k=>$v}{if $v.admin_id == $bug_list.jiedfzr}{$v.admin_realname}{/if}{/foreach}
+                        </td>
+                        <td style="width:25%;font-weight:600;">要求完成时间</td>
+                        <td style="width:25%">{$bug_list['yaoqwcsj']}</td>
+                    </tr>
+                    <tr>
+                        <td style="width:25%;font-weight:600;">优先级别</td>
+                        <td style="width:25%">{foreach name="yxj_list" item="v"}{if $v['daimid'] ==$bug_list.youxjb}{$v['daimmc']}{/if}{/foreach}
+                        </td>
+                        <td style="width:25%;font-weight:600;">项目</td>
+                        <td style="width:25%">{foreach $xm_list as $k2=>$v2}{if $bug_list['xiangm_id'] != 0 && $v2['xiangmid'] == $bug_list['xiangm_id']}{$v2['xiangmmc']} {/if} {/foreach}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:25%;font-weight:600;">任务类型</td>
+                        <td style="width:25%">{foreach name="rwlx_list" item="v"}{if $v['daimid']==$bug_list.renwlx}{$v['daimmc']}{/if}{/foreach}
+                        </td>
+                        <td style="width:25%;font-weight:600;">产品</td>
+                        <td style="width:25%">{foreach cp_list as $k2=>$v2}{if $bug_list['chanp_id'] != 0 && $v2['chanpid'] == $bug_list['chanp_id']}{$v2['chanpmc']} {/if} {/foreach}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:25%;font-weight:600;">状态标志</td>
+                        <td style="width:25%">{foreach ztlist as $k1=>$v1}{if $v1.daimid==$bug_list['biaoz']}{if $v1.daimid == 26}<span style="color:red;">已关闭</span>{else}{$v1.daimmc}{/if}{/if}{/foreach}
+                        </td>
+                        <td style="width:25%;font-weight:600;">模块</td>
+                        <td style="width:25%">{$bug_list['mk_name']}</td>
+                    </tr>
+                    <tr>
+                        <!--<td style="width:25%;font-weight:600;">状态标志</td>
+                        <td style="width:25%">{foreach ztlist as $k1=>$v1}{if $v1.daimid==$bug_list['biaoz']}{if $v1.daimid == 26}<span style="color:red;">已关闭</span>{else}{$v1.daimmc}{/if}{/if}{/foreach}
+                        </td>-->
+                        <td style="width:25%;font-weight:600;">当前状态</td>
+                        {if $bug_list['rw_state'] == 26}
+                        <td style="width:25%;color: red;"></td>
+                        {else}
+                        <td style="width:25%">{foreach name="zhangt_list" item="v"}{if $v['daimid'] == $bug_list.zhuangt}{$v['daimmc']}{/if}{/foreach}
+                        </td>
+                        {/if}
+                        <td style="width:25%;font-weight:600;">当前阶段</td>
+                        <td style="width:25%">{foreach ztlist as $k1=>$v1}{if $v1.daimid==$bug_list['jied']}{$v1.daimmc}{/if}{/foreach}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="space-4"></div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label " style="font-weight:900;"> 文件列表：</label>
+                <table class="table table-striped table-bordered table-hover" id="dynamic-table"
+                       style="font-size:1.4rem; background: #F9F9F9;">
+                    <thead>
+                    <tr>
+                        <th>附件名称</th>
+                        <th>上传者</th>
+                        <th>附件上传时间</th>
+                    </tr>
+                    </thead>
+                    <tbody id="ajax-data">
+                    {foreach file_list as $k=>$v}
+                    <tr>
+                        <td><a href="{$Think.const.HTTP_URL}{$v.path}">{$v.path|substr=24,100}</a></td>
+                        <td>{$v.up_user}</td>
+                        <td>{:date('Y-m-d H:i:s',$v.uptime)}</td>
+                    </tr>
+                    {/foreach}
+                    </tbody>
+                </table>
+            </div>
+            <div class="clearfix form-actions">
+                <div class="">
+                    <button id="ztan" class="btn btn-success" data-toggle="modal" data-target="#myModal">
+                        <i class="ace-icon fa fa-check bigger-110"></i>
+                        接收任务
+                    </button>
+                    <button class="btn btn-info" data-toggle="modal" data-target="#myModal1" id="biangeng">
+                        <i class="ace-icon fa fa-undo bigger-110"></i>
+                        任务变更
+                    </button>
+                    <button class="btn btn-primary" data-toggle="modal" data-target="#myModal3">
+                        <i class="ace-icon fa fa-share-square-o bigger-110"></i>
+                        分配任务
+                    </button>
+                    <button class="btn btn-danger" data-toggle="modal" data-target="#myModal4" id="renwugezhi">
+                        <i class="ace-icon fa fa-recycle bigger-110"></i>
+                        任务搁置
+                    </button>
+                    <button class="btn btn-danger" data-toggle="modal" data-target="#myModal2">
+                        <i class="ace-icon fa fa-times-circle bigger-110"></i>
+                        关闭任务
+                    </button>
+                   <!-- {if $bug_list['rw_state'] != 26}
+                    <button id="ztan" class="btn btn-success" data-toggle="modal" data-target="#myModal">
+                        <i class="ace-icon fa fa-check bigger-110"></i>
+                        接收任务
+                    </button>
+                    <button class="btn btn-info" data-toggle="modal" data-target="#myModal1" id="biangeng">
+                        <i class="ace-icon fa fa-undo bigger-110"></i>
+                        任务变更
+                    </button>
+                    <button class="btn btn-primary" data-toggle="modal" data-target="#myModal3">
+                        <i class="ace-icon fa fa-share-square-o bigger-110"></i>
+                        分配任务
+                    </button>
+                    <button class="btn btn-danger" data-toggle="modal" data-target="#myModal4" id="renwugezhi">
+                        <i class="ace-icon fa fa-recycle bigger-110"></i>
+                        任务搁置
+                    </button>
+                    <button class="btn btn-danger" data-toggle="modal" data-target="#myModal2">
+                        <i class="ace-icon fa fa-times-circle bigger-110"></i>
+                        关闭任务
+                    </button>
+                    {else}
+                    <button class="btn btn-success" data-toggle="modal" data-target="#myModal5">
+                        <i class="ace-icon fa fa-check bigger-110"></i>
+                        重启任务
+                    </button>
+                    {/if}-->
+                </div>
+            </div>
+            <!--任务重启-->
+           <!-- {foreach renwnr as $k1=>$v1}
+            {if $v1['cqsj'] != '' && $v1['cqry'] != ''}
+            <div class="col-md-12">
+                <div class="form-group panel panel-warning">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">任务重启回复：</h3>
+                    </div>
+                    <div class="panel-body" style="font-size: 14px;font-weight:900;padding:0px;">{$v1['zirenwnr']}</div>
+                    <table class="table table-bordered table-condensed">
+                        <tbody>
+                        <tr>
+                            <td style="width:25%;font-weight:600;">操作用户</td>
+                            <td style="width:25%">{foreach admin_list as $k=>$v} {if $v['admin_id'] ==
+                                $v1['lzry']}{$v['admin_realname']}{/if}{/foreach}
+                            </td>
+                            <td style="width:25%;font-weight:600;">阶段负责人</td>
+                            <td style="width:25%">{foreach admin_list as $k=>$v}{if $v.admin_id ==
+                                $v1['fuzr']}{if $v1['fuzr']==''}{else}{$v.admin_realname}{/if}{/if}{/foreach}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:25%;font-weight:600;">阶段工时</td>
+                            <td style="width:25%">0小时</td>
+                            <td style="width:25%;font-weight:600;">操作时间</td>
+                            <td style="width:25%">{$v1['lzsj']}
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {/if}
+            {/foreach}-->
+           <!-- {if $bug_list['cqbeizhu'] != ''}
+            <div class="col-md-12">
+                <div class="form-group panel panel-warning">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">任务重启回复：</h3>
+                    </div>
+                    <div class="panel-body" style="font-size: 14px;font-weight:900;padding:0px;">{$bug_list['cqbeizhu']}</div>
+                    <table class="table table-bordered table-condensed">
+                        <tbody>
+                        <tr>
+                            <td style="width:25%;font-weight:600;">操作用户</td>
+                            <td style="width:25%">{foreach admin_list as $k=>$v} {if $v['admin_id'] ==
+                                $bug_list['lzry']}{$v['admin_realname']}{/if}{/foreach}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:25%;font-weight:600;">阶段负责人</td>
+                            <td style="width:25%">{foreach admin_list as $k=>$v}{if $v.admin_id ==
+                                $bug_list['jiedfzr']}{$v.admin_realname}{/if}{/foreach}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:25%;font-weight:600;">本阶段预计完成时间</td>
+                            <td style="width:25%">{$bug_list['jiedyjwcsj']}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {/if}-->
+        </div>
+        <!--接收过的任务不能再次接收-->
+       <!-- <script>
+            $("#biangeng").click(function(){
+                var bz = "{$bug_list['biaoz']}";
+                var zt = "{$bug_list['zhuangt']}";
+                if(zt != '12'){
+                    alert('你必须接收任务才能变更！');
+                    return false;
+                }else{
+                    if(bz == '42'){
+                        if(confirm('问题处于变更状态，是否要更新任务信息！')){
+                            return true;
+                        }else{
+                            return false;
+                        }
+                    }
+                }
+            });
+            $("#ztan").click(function(){
+                var bz = "{$bug_list['biaoz']}";
+                var zt = "{$bug_list['zhuangt']}";
+                if(zt == '12'){
+                    if(bz == '25'){
+                        if(confirm('问题处于搁置状态，是否要更新任务信息！')){
+                            return true;
+                        }else{
+                            return false;
+                        }
+                    }else if(bz == '42'){
+                        if(confirm('问题处于变更状态，是否要更新任务信息！')){
+                            return true;
+                        }else{
+                            return false;
+                        }
+                    }
+                    if(confirm('你已经接收过任务，是否要更新任务！')){
+                        return true;
+                    }else{
+                        return false;
+                    }
+                }
+            });
+            $("#renwugezhi").click(function(){
+                var bz = "{$bug_list['biaoz']}";
+                var zt = "{$bug_list['zhuangt']}";
+                if(zt != '12'){
+                    alert('你必须接收任务才能任务搁置！');
+                    return false;
+                }else{
+                    if(bz == '25') {
+                        if (confirm('问题处于搁置状态，是否要更新任务信息！')) {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }
+                }
+            });
+        </script>-->
+        {foreach renwnr as $k1=>$v1}
+        {if $v1['zirenwnr'] != '' && $bug_list['beizhu'] != $v1['zirenwnr'] && $v1['gbbz'] != 1 && $v1['cqsj'] == '' && $v1['cqry'] == ''}
+        <div class="col-md-6">
+            <div class="form-group panel {if $v1['bgbz']=='1'}panel-info{elseif $v1['gzbz']=='1'}panel-danger{else}panel-success{/if}">
+                <div class="panel-heading">
+                    <h3 class="panel-title">{if $v1['bgbz']=='1'}任务变更{elseif $v1['gzbz']=='1'}任务搁置{else}接收||分配任务{/if}：</h3>
+                </div>
+                <div class="panel-body" style="font-size: 14px;font-weight:900;padding:0px;">{$v1['zirenwnr']}</div>
+                <table class="table table-bordered table-condensed">
+                    <tbody>
+                    <tr>
+                        <td style="width:25%;font-weight:600;">操作用户</td>
+                        <td style="width:25%">{foreach admin_list as $k=>$v} {if $v['admin_id'] ==
+                            $v1['lzry']}{$v['admin_realname']}{/if}{/foreach}
+                        </td>
+                        <td style="width:25%;font-weight:600;">阶段负责人</td>
+                        <td style="width:25%">{foreach admin_list as $k=>$v}{if $v.admin_id ==
+                            $v1['fuzr']}{if $v1['fuzr']==''}{else}{$v.admin_realname}{/if}{/if}{/foreach}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:25%;font-weight:600;">当前状态</td>
+                        <td style="width:25%">{foreach zirwlx as $k2=>$v2}{if $v2.daimid==$v1['zirwlx']}{$v2.daimmc}{/if}{/foreach}</td>
+                        <td style="width:25%;font-weight:600;">本阶段预计完成时间</td>
+                        <td style="width:25%">{$v1['jiedyjwcsj']}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:25%;font-weight:600;">阶段工时</td>
+                        <td style="width:25%">{$v1['jiedgs']}小时</td>
+                        <td style="width:25%;font-weight:600;">操作时间</td>
+                        <td style="width:25%">{$v1['lzsj']}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:25%;font-weight:600;">本阶段任务是否完成</td>
+                        <td style="width:25%">{if $v1['biaoz'] == 19}完成{else}<span style="color: red;">未完成</span>{/if}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-6"></div>
+        {elseif $v1['gbbz']==1}
+        <div class="col-md-6">
+            <div class="form-group panel panel-danger">
+                <div class="panel-heading">
+                    <h3 class="panel-title">关闭任务编号：#{$bug_list['renwid']}</h3>
+                </div>
+                <div class="panel-body" style="font-size: 15px;font-weight:900;padding:0px;">{$v1['zirenwnr']}</div>
+                <table class="table table-bordered table-condensed">
+                    <tbody>
+                    <tr>
+                        <td style="width:25%;font-weight:600;">操作用户</td>
+                        <td style="width:25%">{foreach admin_list as $k=>$v} {if $v['admin_id'] ==
+                            $v1['lzry']}{$v['admin_realname']}{/if}{/foreach}
+                        </td>
+                        <td style="width:25%;font-weight:600;">阶段负责人</td>
+                        <td style="width:25%">{foreach admin_list as $k=>$v}{if $v.admin_id ==
+                            $v1['fuzr']}{if $v1['fuzr']==''}{else}{$v.admin_realname}{/if}{/if}{/foreach}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:25%;font-weight:600;">当前状态</td>
+                        <td style="width:25%">{foreach zirwlx as $k2=>$v2}{if $v2.daimid==$v1['zirwlx']}{$v2.daimmc}{/if}{/foreach}</td>
+                        <td style="width:25%;font-weight:600;">本阶段预计完成时间</td>
+                        <td style="width:25%">{$v1['jiedyjwcsj']}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:25%;font-weight:600;">阶段工时</td>
+                        <td style="width:25%">{$v1['jiedgs']}小时</td>
+                        <td style="width:25%;font-weight:600;">操作时间</td>
+                        <td style="width:25%">{$v1['lzsj']}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:25%;font-weight:600;">本阶段任务是否完成</td>
+                        <td style="width:25%">{if $v1['biaoz'] == 19}完成{else}<span style="color: red;">未完成</span>{/if}</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <!--<table class="table table-bordered table-condensed">
+                    <tbody>
+                    <tr>
+                        <td style="width:25%;font-weight:600;">提交用户</td>
+                        <td style="width:25%">{foreach admin_list as $k=>$v} {if $v['admin_id'] ==
+                            $bug_list['fabry']}{$v['admin_realname']}{/if}{/foreach}
+                        </td>
+                        <td style="width:25%;font-weight:600;">发布时间</td>
+                        <td style="width:25%">{$bug_list['fabsj']}</td>
+                    </tr>
+                    <tr>
+                        <td style="width:25%;font-weight:600;">关闭人员</td>
+                        <td style="width:25%">{foreach admin_list as $k=>$v}{if $v.admin_id ==
+                            $bug_list.gbry_id}{$v.admin_realname}{/if}{/foreach}
+                        </td>
+                        <td style="width:25%;font-weight:600;">要求完成时间</td>
+                        <td style="width:25%">{$bug_list['yaoqwcsj']}</td>
+                    </tr>
+                    <tr>
+                        <td style="width:25%;font-weight:600;">优先级别</td>
+                        <td style="width:25%">{foreach name="yxj_list" item="v"}{if $v['daimid']
+                            ==$bug_list.youxjb}{$v['daimmc']}{/if}{/foreach}
+                        </td>
+                        <td style="width:25%;font-weight:600;">项目</td>
+                        <td style="width:25%">{foreach $xm_list as $k2=>$v2}{if $bug_list['xiangm_id'] != 0 &&
+                            $v2['xiangmid'] == $bug_list['xiangm_id']}{$v2['xiangmmc']} {/if} {/foreach}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:25%;font-weight:600;">任务类型</td>
+                        <td style="width:25%">{foreach name="rwlx_list" item="v"}{if $v['daimid']
+                            ==$bug_list.renwlx}{$v['daimmc']}{/if}{/foreach}
+                        </td>
+                        <td style="width:25%;font-weight:600;">产品</td>
+                        <td style="width:25%">{foreach cp_list as $k2=>$v2}{if $bug_list['chanp_id'] != 0 && $v2['chanpid']
+                            == $bug_list['chanp_id']}{$v2['chanpmc']} {/if} {/foreach}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:25%;font-weight:600;">当前状态</td>
+                        <td style="width:25%;color: red;">已关闭</td>
+                        <td style="width:25%;font-weight:600;">模块</td>
+                        <td style="width:25%">{$bug_list['mk_name']}</td>
+                    </tr>
+                    </tbody>
+                </table>-->
+            </div>
+        </div>
+        <div class="col-md-6"></div>
+        {/if}
+        {/foreach}
+        <div class="space-4"></div>
+        <!--删除换行-->
+        <script>
+            $(".panel-body>p>br:last").remove();
+        </script>
+
+        <!-- 显示接收任务动态框（Modal） -->
+        <div class="modal fade" id="myModal" aria-labelledby="myModalLabel" aria-hidden="true">
+            <form class="form-horizontal" name="route_add" method="post" action="{:url('admin/Task/issue_jieshou')}">
+                <input type="hidden" value="{$renwid}" name="renwid"/>
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"
+                                    aria-hidden="true">×
+                            </button>
+                            <h4 class="modal-title" id="myModalLabel">
+                                接收任务操作
+                            </h4>
+                        </div>
+                        <div class="modal-body">
+
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right"> 负责人： </label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="col-xs-10 col-sm-5" required readonly
+                                                   value="{foreach name="admin_list" item="v"}{if
+                                            $v['admin_id']==$bug_list.jiedfzr} {$v['admin_realname']}{/if}{/foreach}"/>
+                                        </div>
+                                        <!--隐藏发送有效级别、阶段负责人-->
+                                        <input type="hidden" value="{$bug_list['jiedfzr']}" name="jiedfzr"/>
+                                        <input type="hidden" value="{$bug_list['youxjb']}" name="youxjb"/>
+                                    </div>
+                                    <div class="space-4"></div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right"> 当前阶段： </label>
+                                        <div class="col-sm-8">
+                                            <select name="jied" class="col-xs-10 col-sm-5" required>
+                                                <option value="">请选择阶段</option>
+                                                {foreach name="jied_list" item="v"}
+                                                <option value="{$v['daimid']}">{$v['daimmc']}</option>
+                                                <!--<option value="{$v['daimid']}" {if $v[
+                                                'daimid'] ==$bug_list.jied} selected{/if}>{$v['daimmc']}</option>-->
+                                                {/foreach}
+                                            </select>
+                                            <span class="lbl col-xs-12 col-sm-7"><span class="red">*</span>请选择你当前的阶段</span>
+                                        </div>
+                                    </div>
+                                    <!--<div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right"> 是否搁置任务： </label>
+                                        <div class="col-sm-8">
+                                            <select name="gezhi" class="col-xs-10 col-sm-5" required>
+                                                <option value="0" selected>否</option>
+                                                <option value="1">是</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="space-4"></div>-->
+
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right">预期完成日期：</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" name="jiedyjwcsj" class="col-xs-10 col-sm-5 date-picker" required value="" id="jieduan2"/>
+                                            <span class="lbl col-xs-12 col-sm-7"><span class="red">*</span>要求完成时间为:{$bug_list['yaoqwcsj']}</span>
+                                        </div>
+                                    </div>
+                                    <div class="space-4"></div>
+
+                                  <!--  <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right"> 要求完成日期： </label>
+                                        <div class="col-sm-8">
+                                            <input type="text" name="yaoqwcsj" class="col-xs-10 col-sm-5 date-picker"
+                                                   value="{$bug_list['yaoqwcsj']}" required/>
+                                        </div>
+                                    </div>
+                                    <div class="space-4"></div>-->
+
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">
+                                提交保存
+                            </button>
+                            <button class="btn btn-info" type="reset">
+                                重置
+                            </button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">
+                                关闭
+                            </button>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </form>
+        </div><!-- /.modal -->
+
+        <!-- 显示分配任务动态框（Modal） -->
+        <div class="modal fade" id="myModal3" aria-labelledby="myModalLabel" aria-hidden="true">
+            <form class="form-horizontal" name="route_add" method="post" action="{:url('admin/Task/issue_fenpei')}">
+                <input type="hidden" value="{$renwid}" name="renwid"/>
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"
+                                    aria-hidden="true">×
+                            </button>
+                            <h4 class="modal-title" id="myModalLabel3">
+                                分配任务操作
+                            </h4>
+                        </div>
+                        <div class="modal-body">
+
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right"> 负责人： </label>
+                                        <div class="col-sm-9">
+                                            <select name="jiedfzr" id="select-3" class="col-xs-10 col-sm-6" required>
+                                                {foreach name="admin_list" item="v"}
+                                                <option value="{$v['admin_id']}" {if $v['admin_id'] ==$bug_list.jiedfzr}
+                                                selected{/if}>{$v['admin_realname']}</option>
+                                                {/foreach}
+                                            </select>
+                                        </div>
+                                        <!--隐藏发送有效级别、阶段负责人-->
+                                        <input type="hidden" value="{$bug_list['fabry']}" name="fabry"/>
+                                        <input type="hidden" value="{$bug_list['youxjb']}" name="youxjb"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right"> 本阶段任务是否完成： </label>
+                                        <div class="col-sm-9">
+                                            <select name="zirwbz" class="col-xs-10 col-sm-6" required>
+                                                {foreach name="zirwbz" item="v"}
+                                                <option value="{$v['daimid']}">{$v['daimmc']}</option>
+                                                {/foreach}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="space-4"></div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right"> 请输入工时： </label>
+                                        <div class="col-sm-2">
+                                            <input type="text" class="col-sm-8" id="hour" name="hour" value="0"/><span style="line-height: 30px;">小时</span>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <input type="text" class="col-sm-8" id="fen" name="fen" value=""/><span style="line-height: 30px;">分</span>
+                                        </div>
+                                    </div>
+                                    <div class="space-4"></div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right" style="font-weight:900;"> 回复问题内容: </label>
+                                        <div class="col-sm-10">
+                                            <script src="__PUBLIC__/ueditor/ueditor.config.js"
+                                                    type="text/javascript"></script>
+                                            <script src="__PUBLIC__/ueditor/ueditor.all.js"
+                                                    type="text/javascript"></script>
+                                            <textarea name="renwnr" rows="100%" style="width:100%" id="myEditor3" required></textarea>
+                                            <script type="text/javascript">
+                                                var editor = new UE.ui.Editor();
+                                                editor.render("myEditor3");
+                                                //获取统计，为了判断是否为空
+                                                function neirong4() {
+                                                    //console.log($("#edui339_wordcount").html());
+                                                    return $.trim($("#edui339_wordcount").html());
+                                                }
+                                            </script>
+                                        </div>
+                                    </div>
+                                    <div class="space-4"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary" id="fenpeirenwu">
+                                提交保存
+                            </button>
+                            <button class="btn btn-info" type="reset">
+                                重置
+                            </button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">
+                                关闭
+                            </button>
+                        </div>
+                        <!--小时和分只能输入数字，并且为正数-->
+                        <script>
+                            $("#fenpeirenwu").click(function(){
+                                if(neirong4() == '字数统计' || neirong4() == '当前已输入1个字符, 您还可以输入9999个字符。' || neirong4() == '当前已输入0个字符, 您还可以输入10000个字符。'){
+                                    alert('内容不能为空');
+                                    return false;
+                                }
+                                var hour = $("#hour").val();
+                                var fen = $("#fen").val();
+                                var parnt = /^([1-9]\d*(\.\d*[1-9])?)|(0\.\d*[1-9])$/;
+                                //alert(parnt.exec(hour));return false;
+                                if(parnt.exec(hour) == null){
+                                    if(hour!=0){
+                                        alert('请输入一个大于零的数字');
+                                        return false;
+                                    }
+                                }
+                                if(parnt.exec(fen) == null){
+                                    if(fen!=0){
+                                        alert('请输入一个大于零的数字');
+                                        return false;
+                                    }
+                                }
+                                if(hour<0){
+                                    alert('请输入一个大于零的数字');
+                                    return false;
+                                }
+                                if(fen<0){
+                                    alert('请输入一个大于零的数字');
+                                    return false;
+                                }
+                                return true;
+                            });
+                        </script>
+                       <!-- &lt;!&ndash;分配任务的内容不能为空&ndash;&gt;
+                        <script>
+                            $("#fenpeirenwu").click(function(){
+                                var val = $("#myEditor3").text();
+                                alert(val);
+                                if(val == ''){
+                                    alert('分配任务，必须回复内容！');
+                                    return false;
+                                }
+                            });
+                        </script>-->
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </form>
+        </div><!-- /.modal -->
+
+        <!-- 显示变更任务动态框（Modal） -->
+        <div class="modal fade" id="myModal1" aria-labelledby="myModalLabel" aria-hidden="true">
+            <form class="form-horizontal" name="route_add" method="post" action="{:url('admin/Task/issue_liuzhuan')}">
+                <input type="hidden" value="{$renwid}" name="renwid"/>
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"
+                                    aria-hidden="true">×
+                            </button>
+                            <h4 class="modal-title" id="myModalLabel1">
+                                变更任务操作
+                            </h4>
+                        </div>
+                        <div class="modal-body">
+
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="form-group">
+                                        <!--变更任务负责人不能选择-->
+                                        <label class="col-sm-2 control-label no-padding-right"> 负责人： </label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="col-xs-10 col-sm-6" required readonly
+                                                   value="{foreach name="admin_list" item="v"}{if
+                                            $v['admin_id']==$bug_list.jiedfzr} {$v['admin_realname']}{/if}{/foreach}"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right"> 任务类型： </label>
+                                        <div class="col-sm-9">
+                                            <select name="renwlx" class="col-xs-10 col-sm-6" required>
+                                                <option value="">请选择类型</option>
+                                                {foreach name="rwlx_list" item="v"}
+                                                <option value="{$v['daimid']}" {if $v['daimid'] ==$bug_list.renwlx} selected{/if}>{$v['daimmc']}</option>
+                                                {/foreach}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="space-4"></div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right"> 优先级别： </label>
+                                        <div class="col-sm-9">
+                                            <select name="youxjb" id="youxjb1" class="col-xs-10 col-sm-6" required>
+                                                <option value="0">请选择优先级别</option>
+                                                {foreach name="yxj_list" item="v"}
+                                                <option value="{$v['daimid']}" {if $v['daimid'] ==$bug_list.youxjb} selected{/if}>{$v['daimmc']}</option>
+                                                {/foreach}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="space-4"></div>
+
+                                    <div class="space-4"></div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right"> 要求完成日期： </label>
+                                        <div class="col-sm-9">
+                                            <input type="text" name="yaoqwcsj" class="col-xs-10 col-sm-6 date-picker"
+                                                   value="{$bug_list['yaoqwcsj']}" required/>
+                                        </div>
+                                    </div>
+                                    <div class="space-4"></div>
+
+                                    <!--隐藏发送有效级别、发布人员-->
+                                    <input type="hidden" value="{$bug_list['fabry']}" name="fabry"/>
+                                    <input type="hidden" value="{$bug_list['jiedfzr']}" name="jiedfzr"/>
+                                    <div class="space-4"></div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right" style="font-weight:900;"> 变更任务内容: </label>
+                                        <div class="col-sm-10">
+                                            <textarea name="renwnr" rows="100%" style="width:100%"
+                                                      id="myEditor" required></textarea>
+                                            <script type="text/javascript">
+                                                var editor = new UE.ui.Editor();
+                                                editor.render("myEditor");
+                                                //获取统计，为了判断是否为空
+                                                function neirong1() {
+                                                    //console.log($("#myEditor").html());
+                                                    return $.trim($("#edui227_wordcount").html());
+                                                }
+                                            </script>
+                                        </div>
+                                    </div>
+                                    <div class="space-4"></div>
+
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary" id="tijiao2">
+                                提交保存
+                            </button>
+                            <button class="btn btn-info" type="reset">
+                                重置
+                            </button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">
+                                关闭
+                            </button>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </form>
+            <script>
+                $("#tijiao2").click(function(){
+                    if(neirong1() == '字数统计' || neirong1() == '当前已输入1个字符, 您还可以输入9999个字符。' || neirong1() == '当前已输入0个字符, 您还可以输入10000个字符。'){
+                        alert('内容不能为空');
+                        return false;
+                    }
+                });
+            </script>
+        </div><!-- /.modal -->
+
+        <!-- 显示搁置任务动态框（Modal） -->
+        <div class="modal fade" id="myModal4" aria-labelledby="myModalLabel" aria-hidden="true">
+            <form class="form-horizontal" name="" method="post" action="{:url('admin/Task/issue_gezhi')}">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"
+                                    aria-hidden="true">×
+                            </button>
+                            <h4 class="modal-title" id="myModalLabel4">
+                                搁置任务操作
+                            </h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="space-4"></div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right"> 状态标志： </label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="col-xs-10 col-sm-5" readonly name="biaoz" value="搁置任务" />
+                                        </div>
+                                    </div>
+                                    <div class="space-4"></div>
+                                    <input type="hidden" value="{$renwid}" name="renwid"/>
+                                    <input type="hidden" value="{$bug_list['jiedfzr']}" name="jiedfzr"/>
+                                    <input type="hidden" value="{$bug_list['fabry']}" name="fabry"/>
+                                    <input type="hidden" value="{$bug_list['youxjb']}" name="youxjb"/>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right"> 请输入工时： </label>
+                                        <div class="col-sm-2">
+                                            <input type="text" class="col-sm-8" id="hour1" name="hour" value="0"/><span style="line-height: 30px;">小时</span>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <input type="text" class="col-sm-8" id="fen1" name="fen" value=""/><span style="line-height: 30px;">分</span>
+                                        </div>
+                                    </div>
+                                    <div class="space-4"></div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right" style="font-weight:900;"> 变更任务内容: </label>
+                                        <div class="col-sm-10">
+                                            <textarea name="renwnr" rows="100%" style="width:100%"
+                                                      id="myEditor4" required></textarea>
+                                            <script type="text/javascript">
+                                                var editor = new UE.ui.Editor();
+                                                editor.render("myEditor4");
+                                                //获取统计，为了判断是否为空
+                                                function neirong2() {
+                                                    //console.log($("#edui115_wordcount").html());
+                                                    return $.trim($("#edui115_wordcount").html());
+                                                }
+                                            </script>
+                                        </div>
+                                    </div>
+                                    <!--<div class="form-group">
+                                         <label class="col-sm-2 control-label no-padding-right" style="font-weight:900;"> 任务搁置说明: </label>
+                                       <div class="col-sm-10">
+                                        <textarea id="beizhu1" name="renwnr" cols="20" rows="8"
+                                                  class="col-xs-10 col-sm-7 limited3" maxlength="300"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="space-4"></div>-->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary" id="tijiao1">
+                                提交保存
+                            </button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">
+                                关闭
+                            </button>
+                        </div>
+                        <!--一个简单的jq，判断阶段负责人是否和当前操作人员一致，如果不一致提醒一下-->
+                        <script>
+                            $("#tijiao1").click(function () {
+                                var fuzr = {$bug_list['jiedfzr']};
+                                var admin_id = {$admin_id};
+                                //关闭任务备注不能为空
+                                var beizhu1 = $("#beizhu1").val();
+                                if (beizhu1 == '') {
+                                    alert('请输入要搁置任务的原因');
+                                    return false;
+                                } else {
+                                    if (fuzr != admin_id) {
+                                        if (confirm('你不是当前阶段负责人，你确定要搁置任务吗？')) {
+                                            return true;
+                                        } else {
+                                            return false;
+                                        }
+                                    }
+                                    return true;
+                                }
+                            });
+                        </script>
+                        <!--小时和分只能输入数字，并且为正数-->
+                        <script>
+                            $("#tijiao1").click(function(){
+                                if(neirong2() == '字数统计' || neirong2() == '当前已输入1个字符, 您还可以输入9999个字符。' || neirong2() == '当前已输入0个字符, 您还可以输入10000个字符。'){
+                                    alert('内容不能为空');
+                                    return false;
+                                }
+                                var hour1 = $("#hour1").val();
+                                var fen1 = $("#fen1").val();
+                                var parnt = /^([1-9]\d*(\.\d*[1-9])?)|(0\.\d*[1-9])$/;
+                                //alert(parnt.exec(hour));return false;
+                                if(parnt.exec(hour1) == null){
+                                    if(hour1!=0){
+                                        alert('请输入一个大于零的数字');
+                                        return false;
+                                    }
+                                }
+                                if(parnt.exec(fen1) == null){
+                                    if(fen1!=0){
+                                        alert('请输入一个大于零的数字');
+                                        return false;
+                                    }
+                                }
+                                if(hour1<0){
+                                    alert('请输入一个大于零的数字');
+                                    return false;
+                                }
+                                if(fen1<0){
+                                    alert('请输入一个大于零的数字');
+                                    return false;
+                                }
+                                return true;
+                            });
+                        </script>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </form>
+        </div><!-- /.modal -->
+
+        <!-- 显示关闭任务动态框（Modal） -->
+        <div class="modal fade" id="myModal2" aria-labelledby="myModalLabel" aria-hidden="true">
+            <form class="form-horizontal" name="" method="post" action="{:url('admin/Task/issue_close')}">
+                <input type="hidden" value="{$renwid}" name="renwid"/>
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"
+                                    aria-hidden="true">×
+                            </button>
+                            <h4 class="modal-title" id="myModalLabel2">
+                                关闭任务操作
+                            </h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <!--隐藏发送发布人员-->
+                                    <input type="hidden" value="{$bug_list['fabry']}" name="fabry"/>
+                                    <!--隐藏发送阶段负责人-->
+                                    <input type="hidden" value="{$bug_list['jiedfzr']}" name="jiedfzr"/>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right"> 请输入工时： </label>
+                                        <div class="col-sm-2">
+                                            <input type="text" class="col-sm-8" id="hour2" name="hour" value="0"/><span style="line-height: 30px;">小时</span>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <input type="text" class="col-sm-8" id="fen2" name="fen" value=""/><span style="line-height: 30px;">分</span>
+                                        </div>
+                                    </div>
+                                    <div class="space-4"></div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right" style="font-weight:900;"> 关闭任务内容: </label>
+                                        <div class="col-sm-10">
+                                            <textarea name="renwnr" rows="100%" style="width:100%"
+                                                      id="myEditor5" required></textarea>
+                                            <script type="text/javascript">
+                                                var editor = new UE.ui.Editor();
+                                                editor.render("myEditor5");
+                                                //获取统计，为了判断是否为空
+                                                function neirong3() {
+                                                    //console.log($("#edui1_wordcount").html());
+                                                    return $.trim($("#edui1_wordcount").html());
+                                                }
+                                            </script>
+                                        </div>
+                                    </div>
+                                   <!-- <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right" style="font-weight:900;"> 任务关闭说明: </label>
+                                        <div class="col-sm-10">
+                                            <textarea id="beizhu" name="renwnr" cols="20" rows="8"
+                                                      class="col-xs-10 col-sm-7 limited3" maxlength="300"></textarea>
+                                        </div>
+                                    </div>-->
+                                    <div class="space-4"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer" id="bzguanbi">
+                            <button type="submit" class="btn btn-primary" id="tijiao">
+                                提交保存
+                            </button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">
+                                关闭
+                            </button>
+                        </div>
+                        <!--一个简单的jq，判断阶段负责人是否和当前操作人员一致，如果不一致提醒一下-->
+                        <script>
+                            $("#tijiao").click(function () {
+                                var fuzr = {$bug_list['jiedfzr']};
+                                var admin_id = {$admin_id};
+                                //关闭任务备注不能为空
+                                var beizhu = $("#beizhu").val();
+                                if (beizhu == '') {
+                                    alert('请输入要关闭的原因');
+                                    return false;
+                                } else {
+                                    if (fuzr != admin_id) {
+                                        if (confirm('你不是当前阶段负责人，你确定要关闭吗？')) {
+                                            return true;
+                                        } else {
+                                            return false;
+                                        }
+                                    }
+                                    return true;
+                                }
+                            });
+                        </script>
+                        <!--小时和分只能输入数字，并且为正数-->
+                        <script>
+                            $("#tijiao").click(function(){
+                                if(neirong3() == '字数统计' || neirong3() == '当前已输入1个字符, 您还可以输入9999个字符。' || neirong3() == '当前已输入0个字符, 您还可以输入10000个字符。'){
+                                    alert('内容不能为空');
+                                    return false;
+                                }
+                                var hour2 = $("#hour2").val();
+                                var fen2 = $("#fen2").val();
+                                var parnt = /^([1-9]\d*(\.\d*[1-9])?)|(0\.\d*[1-9])$/;
+                                //alert(parnt.exec(hour));return false;
+                                if(parnt.exec(hour2) == null){
+                                    if(hour2!=0){
+                                        alert('请输入一个大于零的数字');
+                                        return false;
+                                    }
+                                }
+                                if(parnt.exec(fen2) == null){
+                                    if(fen2!=0){
+                                        alert('请输入一个大于零的数字');
+                                        return false;
+                                    }
+                                }
+                                if(hour2<0){
+                                    alert('请输入一个大于零的数字');
+                                    return false;
+                                }
+                                if(fen2<0){
+                                    alert('请输入一个大于零的数字');
+                                    return false;
+                                }
+                                return true;
+                            });
+                        </script>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </form>
+        </div><!-- /.modal -->
+
+        <!-- 显示重启任务动态框（Modal） -->
+        <div class="modal fade" id="myModal5" aria-labelledby="myModalLabel" aria-hidden="true">
+            <form class="form-horizontal" name="" method="post" action="{:url('admin/Task/issue_restart')}">
+                <input type="hidden" value="{$renwid}" name="renwid"/>
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"
+                                    aria-hidden="true">×
+                            </button>
+                            <h4 class="modal-title" id="myModalLabel5">
+                                重启任务操作
+                            </h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right"> 负责人： </label>
+                                        <div class="col-sm-9">
+                                            <select name="jiedfzr" id="select-4" class="col-xs-10 col-sm-6" required>
+                                                {foreach name="admin_list" item="v"}
+                                                <option value="{$v['admin_id']}" {if $v['admin_id'] ==$bug_list.jiedfzr}
+                                                selected{/if}>{$v['admin_realname']}</option>
+                                                {/foreach}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="space-4"></div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right"> 要求完成日期： </label>
+                                        <div class="col-sm-9">
+                                            <input type="text" name="yaoqwcsj" class="col-xs-10 col-sm-6 date-picker"
+                                                   value="{$bug_list['yaoqwcsj']}" required/>
+                                        </div>
+                                    </div>
+                                    <div class="space-4"></div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label no-padding-right" style="font-weight:900;"> 重启任务说明: </label>
+                                        <div class="col-sm-10">
+                                            <textarea id="cqbeizhu" name="renwnr" cols="20" rows="8"
+                                                      class="col-xs-10 col-sm-7 limited3" maxlength="300"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="space-4"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer" id="bzcq">
+                            <button type="submit" class="btn btn-primary" id="tijiao5">
+                                提交保存
+                            </button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">
+                                关闭
+                            </button>
+                        </div>
+                        <!--一个简单的jq，判断阶段负责人是否和当前操作人员一致，如果不一致提醒一下-->
+                        <script>
+                            $("#tijiao5").click(function () {
+                                //任务重启备注不能为空
+                                var beizhu = $("#cqbeizhu").val();
+                                if (beizhu == '') {
+                                    alert('请输入要重启的原因');
+                                    return false;
+                                } else {
+                                    return true;
+                                }
+                            });
+                        </script>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </form>
+        </div><!-- /.modal -->
+    </div>
+</div>
+</div>
+<div style="width: 80px;position: relative;left: 80%;">
+    <header id="foot1"></header>
+    <a href="#top" class="back-to-top" style="font-size: 20px;"> 跳到头部</a>
+</div>
+{/block}
+{block name="scripts"}
+<script>
+    $('.date-picker').datepicker({
+        autoclose: true,
+        todayHighlight: true,
+        language: 'zh-CN',
+    });
+    $("#select-2").select2({
+        allowClear: true,
+    });
+    $("#select-3").select2({
+        allowClear: true,
+    });
+    $("#select-4").select2({
+        allowClear: true,
+    });
+    $(".select2.select2-container.select2-container--default").width(256);
+    $(".select2-selection__clear").html('');
+    $.fn.modal.Constructor.prototype.enforceFocus = function () {
+    }; //重写获取焦点
+</script>
+{/block}

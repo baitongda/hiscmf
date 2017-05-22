@@ -1,0 +1,56 @@
+{extend name="admin@public/base" /}
+{block name="main-content"}
+<div class="page-content">
+    <div class="page-header">
+        <h1>
+            您当前操作
+            <small>
+                <i class="ace-icon fa fa-angle-double-right"></i>
+                提交bug
+            </small>
+        </h1>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <form class="form-horizontal" method="post" action="{:url('admin/Sysbug/put_runbug')}">
+                <!--隐藏提交的bug的用户id-->
+                <input type="hidden" name="admin_id" value="{$admin_id}"/>
+                <div class="form-group">
+                    <label class="col-sm-0 control-label" style="font-weight:900;"> bug详细描述: </label><br />
+                    <div class="col-sm-10">
+                        <script src="__PUBLIC__/ueditor/ueditor.config.js" type="text/javascript"></script>
+                        <script src="__PUBLIC__/ueditor/ueditor.all.js" type="text/javascript"></script>
+                        <textarea name="content" rows="100%" style="width:100%" id="myEditor"></textarea>
+                        <script type="text/javascript">
+                           /* var editor = new UE.ui.Editor({
+                                "initialFrameHeight": "200",
+                                toolbars: [['fullscreen', 'source', '|', 'undo', 'redo', '|', 'bold', 'italic', 'underline', 'fontborder', 'strikethrough','removeformat', 'formatmatch', 'autotypeset', 'blockquote', 'pasteplain', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', 'selectall', 'cleardoc', '|', 'customstyle', 'paragraph', 'fontfamily', 'fontsize', '|', 'imagecenter', '|', 'emotion','date', 'time', 'spechars',]]
+                            });*/
+                           var editor = new UE.ui.Editor({
+                               "initialFrameHeight": "200"
+                           });
+                            editor.render("myEditor");
+                        </script>
+                    </div>
+                </div>
+                <div class="space-4"></div>
+                <div class="">
+                    <div class="col-md-offset-3 col-md-9">
+                        <button class="btn btn-info" type="submit">
+                            <i class="ace-icon fa fa-check bigger-110"></i>
+                            提交
+                        </button>
+                        &nbsp; &nbsp; &nbsp;
+                        <button class="btn" type="reset">
+                            <i class="ace-icon fa fa-undo bigger-110"></i>
+                            重置
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{/block}
+{block name="scripts"}
+{/block}

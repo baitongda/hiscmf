@@ -1,0 +1,91 @@
+{extend name="admin@public/base" /}
+{block name="main-content"}
+<div class="page-content">
+
+	<!--主题-->
+	<div class="page-header">
+		<h1>
+			您当前操作
+			<small>
+				<i class="ace-icon fa fa-angle-double-right"></i>
+				添加状态代码
+			</small>
+		</h1>
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			<form class="form-horizontal" method="post" action="{:url('admin/Basedata/zt_add')}">
+				<div class="form-group">
+					<label class="col-sm-2 control-label no-padding-right"> 状态代码名称：  </label>
+					<div class="col-sm-10">
+						<input type="text" name="daimmc" id="daimmc" placeholder="输入状态代码名称" class="col-xs-10 col-sm-5"/>
+					</div>
+				</div>
+				<!--引入拼音插件-->
+				<script src="__PUBLIC__/yfcmf/pinyin_dict_firstletter.js"></script>
+				<script src="__PUBLIC__/yfcmf/pinyinUtil.js"></script>
+				<script type="text/javascript">
+					$("#daimmc").bind("input propertychange",function(){
+						//实时的获取输入的文字
+						var a = $(this).val();
+						var pinym = pinyinUtil.getFirstLetter(a,false);
+						$("#pinym").attr('value',pinym);
+					});
+				</script>
+				<div class="space-4"></div>
+				<!--保留项目编码-->
+				<!--<div class="form-group">
+					<label class="col-sm-2 control-label no-padding-right"> 项目编号：  </label>
+					<div class="col-sm-10">
+						<input type="text" name="xiangmbm" id="xiangmbm" placeholder="输入项目编号" class="col-xs-10 col-sm-5"/>
+						<span class="lbl col-xs-12 col-sm-7"><span class="red">*</span>现在还不用,允许为空</span>
+					</div>
+				</div>
+				<div class="space-4"></div>-->
+
+				<div class="form-group">
+					<label class="col-sm-2 control-label no-padding-right"> 状态类型：  </label>
+					<div class="col-sm-10">
+						<input type="text" name="fenlbm" id="fenlbm" class="col-xs-10 col-sm-5"/>
+					</div>
+				</div>
+				<div class="space-4"></div>
+
+				<div class="form-group">
+					<label class="col-sm-2 control-label no-padding-right"> 拼音码：  </label>
+					<div class="col-sm-10">
+						<input type="text" name="pinym" id="pinym" class="col-xs-10 col-sm-5" readonly="readonly"/>
+						<span class="lbl col-xs-12 col-sm-7"><span class="red">*</span>自动生成，不用编辑</span>
+					</div>
+				</div>
+				<div class="space-4"></div>
+
+				<div class="form-group">
+					<label class="col-sm-2 control-label no-padding-right"> 是否有效： </label>
+					<div class="col-sm-10" style="padding-top:5px;">
+						<input name="youxbz" id="youxbz" value="1" class="ace ace-switch ace-switch-4 btn-flat" type="checkbox" checked="checked" />
+						<span class="lbl">&nbsp;默认开启</span>
+					</div>
+				</div>
+				<div class="space-4"></div>
+
+				<div class="clearfix form-actions">
+					<div class="col-md-offset-3 col-md-9">
+						<button class="btn btn-info" type="submit">
+							<i class="ace-icon fa fa-check bigger-110"></i>
+							添加
+						</button>
+
+						&nbsp; &nbsp; &nbsp;
+						<button class="btn" type="reset">
+							<i class="ace-icon fa fa-undo bigger-110"></i>
+							重置
+						</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+
+</div><!-- /.page-content -->
+{/block}

@@ -1,0 +1,375 @@
+{extend name="admin@public/base" /}
+{block name="main-content"}
+<div class="page-content">
+    <link rel="stylesheet" type="text/css" media="all" href="__PUBLIC__/sldate/daterangepicker-bs3.css"/>
+    <form name="" class="" id="list-filter" method="post" action="{:url('admin/Weeklog/weeklog_list')}">
+        <div class="row maintop">
+            <div class="col-xs-4 col-sm-3 btn-sespan">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-calendar fa fa-calendar"></i></span>
+                    <input type="text" name="reservation" id="reservation" class="sl-date" value="" placeholder="点击选择日期范围"/>
+                </div>
+            </div>
+            <div class="col-xs-8 col-sm-8">
+                <button type="button" class="btn btn-xs btn-primary" data-toggle="modal" data-target="#myModal">
+                    <i class="ace-icon fa fa-plus bigger-110"></i>
+                    添加周报
+                </button>
+                <a href="{:url('admin/Weeklog/weeklog_list')}">
+                    <button type="button" class="btn btn-xs btn-success">
+                        <i class="ace-icon fa fa-recycle bigger-110"></i>
+                        全部
+                    </button>
+                </a>
+                <a href="{:url('admin/Weeklog/weeklog_list',array('tijiaobz'=>'1'))}">
+                    <button type="button" class="btn btn-xs btn-success">
+                        <i class="ace-icon fa fa-check bigger-110"></i>
+                        已提交
+                    </button>
+                </a>
+                <a href="{:url('admin/Weeklog/weeklog_list',array('tijiaobz'=>'2'))}">
+                    <button type="button" class="btn btn-xs btn-danger">
+                        <i class="ace-icon fa fa-remove bigger-110"></i>
+                        未提交
+                    </button>
+                </a>
+            </div>
+        </div>
+    </form>
+    <div class="row">
+        <div class="col-xs-12">
+            <div>
+                <form id="alldel" name="alldel" method="post" action="{:url('admin/Task/issue_list')}">
+                    <div class="table-responsive">
+                        <table id="issueTable" class="table table-bordered table-hover ">
+                            <thead>
+                            <tr>
+                                <th class="hidden-xs" style="width: 4%;">ID</th>
+                                <th style="width: 7%;">部门</th>
+                                <th class="" style="width: 5%;">人员</th>
+                                <th class="" style="width: 15%;">本周内容</th>
+                                <th class="" style="width: 15%;">下周计划</th>
+                                <th class="" style="width: 15%;">问题建议</th>
+                                <th class="" style="width: 12%;">上级评价</th>
+                                <th class="" style="width: 7%;">上传的周报</th>
+                                <th class="" style="width: 7%;">提交时间</th>
+                                <th class="" style="width: 5%;">标志</th>
+                                <!--<th class="">操作时间</th>-->
+                                <th class="" style="width: 8%;">操作</th>
+                            </tr>
+                            </thead>
+                            <tbody id="ajax-data">
+                                {include file="weeklog/ajax_weeklog_list"/}
+                            </tbody>
+                        </table>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- 显示添加周报动态框（Modal） -->
+    <div class="modal fade" id="myModal" aria-labelledby="myModalLabel" aria-hidden="true">
+        <form id="weekform" class="form-horizontal " name="route_add" method="post" action="{:url('admin/Weeklog/weeklog_runadd')}" enctype="multipart/form-data">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"
+                                aria-hidden="true">×
+                        </button>
+                        <h4 class="modal-title" id="myModalLabel">
+                            添加周报操作
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label no-padding-right"> 上级领导:</label>
+                                    <div class="col-sm-10">
+                                        <select name="sjld" id="select-4" class="col-xs-12 col-sm-12" required>
+                                            {foreach name="admin_list" item="v"}
+                                            <option value="{$v['admin_id']}">{$v['admin_realname']}</option>
+                                            {/foreach}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="space-4"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label no-padding-right">周报日期:</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" name="zb_time" id="zb_time" class="col-xs-5 col-sm-5 date-picker addtime1" required/>
+                                        <input type="text" name="weeks1" id="weeks1" class="col-xs-2 col-sm-2" readonly/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <a data-info="确定要生成本周的周报数据吗？" id="weeklog_create" class="confirm-zb-btn" href="{:url('admin/Weeklog/weeklog_create')}"><button type="button" class="btn btn-xs btn-success"><i class="ace-icon fa fa-bolt bigger-110"></i>生成周报数据</button>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="space-4"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label no-padding-right">本周工作:</label>
+                                    <div class="col-sm-10">
+                                        <textarea name="zb_content" id="zb_content" rows="8%" class="col-xs-10 col-sm-10" required></textarea>
+                                    </div>
+                                </div>
+                                <div class="space-4"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label no-padding-right">下周工作计划: </label>
+                                    <div class="col-sm-10">
+                                        <textarea name="zb_next_content" rows="8%" class="col-xs-10 col-sm-10" required></textarea>
+                                    </div>
+                                </div>
+                                <div class="space-4"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label no-padding-right">存在问题改进措施建议: </label>
+                                    <div class="col-sm-10">
+                                        <textarea name="zb_issue" rows="3%" class="col-xs-10 col-sm-10"></textarea>
+                                    </div>
+                                </div>
+                                <div class="space-4"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label no-padding-right">上传周报: </label>
+                                    <div class="col-sm-10">
+                                        <textarea name="up_zb" rows="1%" class="col-xs-7 col-sm-7 up_zb" readonly></textarea>
+                                        <a href="javascript:;" class="file" title="点击选择所要上传的周报">
+                                            <input type="file" name="file1" id="file1" multiple="multiple"/>
+                                            选择上传文件
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="space-4"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary" name="baocun">
+                            保存
+                        </button>
+                        <button type="submit" class="btn btn-primary" name="tijiao">
+                            提交
+                        </button>
+                        <button class="btn btn-info" type="reset">
+                            重置
+                        </button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            关闭
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- 显示修改周报动态框（Modal） -->
+    <div class="modal fade in" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
+        <form class="form-horizontal ajaxForm" name="runedit" method="post" action="{:url('admin/Weeklog/weeklog_runedit')}">
+            <input type="hidden" name="id" id="weeklog_id" value="" />
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" id="gb" aria-hidden="true">×</button>
+                        <h4 class="modal-title" id="myModalLabel1">
+                            修改周报操作
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label no-padding-right"> 上级领导:</label>
+                                    <div class="col-sm-10">
+                                        <select name="sjld" id="select-5" class="col-xs-12 col-sm-12" required>
+                                            {foreach name="admin_list" item="v"}
+                                            <option value="{$v['admin_id']}">{$v['admin_realname']}</option>
+                                            {/foreach}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="space-4"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label no-padding-right">周报日期:</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" name="zb_edit_time" id="zb_edit_time" class="col-xs-5 col-sm-5 date-picker" required/>
+                                        <input type="text" name="zb_edit_weeks" id="zb_edit_weeks" class="col-xs-2 col-sm-2" value="" readonly/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <a data-info="确定要生成本周的周报数据吗？" class="confirm-zb-edit-btn" href="{:url('admin/Weeklog/weeklog_create')}"><button type="button" class="btn btn-xs btn-success sczb"><i class="ace-icon fa fa-bolt bigger-110"></i>生成周报数据</button>
+                                        </a>
+                                        <a class="dc_word" href="#"><button type="button" class="btn btn-xs btn-info"><i class="ace-icon fa fa-download bigger-110"></i>导出为word</button>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="space-4"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label no-padding-right">本周工作:</label>
+                                    <div class="col-sm-10">
+                                        <textarea name="zb_edit_content" id="zb_edit_content" rows="8%" class="col-xs-10 col-sm-10" required></textarea>
+                                    </div>
+                                </div>
+                                <div class="space-4"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label no-padding-right">下周工作计划: </label>
+                                    <div class="col-sm-10">
+                                        <textarea name="zb_next_edit_content" id="zb_next_edit_content" rows="8%" class="col-xs-10 col-sm-10" required></textarea>
+                                    </div>
+                                </div>
+                                <div class="space-4"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label no-padding-right">存在问题改进措施建议: </label>
+                                    <div class="col-sm-10">
+                                        <textarea name="zb_edit_issue" id="zb_edit_issue" rows="3%" class="col-xs-10 col-sm-10" required></textarea>
+                                    </div>
+                                </div>
+                                <div class="space-4"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label no-padding-right">上传周报: </label>
+                                    <div class="col-sm-10">
+                                        <textarea name="up_zb" id="upzb2" rows="1%" class="col-xs-7 col-sm-7 up_zb" readonly></textarea>
+                                        <a href="javascript:;" class="file" title="点击选择所要上传的周报">
+                                            <input type="file" name="file1" id="file2" multiple="multiple"/>
+                                            选择上传文件
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="space-4"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary" name="baocun">
+                            保存
+                        </button>
+                        <button type="submit" class="btn btn-primary" name="tijiao">
+                            提交
+                        </button>
+                        <button class="btn btn-info" type="reset">
+                            重置
+                        </button>
+                        <button type="button" class="btn btn-default" id="gbb">
+                            关闭
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- 显示已经提交周报动态框（Modal） -->
+    <div class="modal fade in" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2" aria-hidden="true">
+        <form class="form-horizontal ajaxForm" name="runedit" method="post" action="">
+            <input type="hidden" name="id" id="weeklog_id2" value="" />
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close gbbb" aria-hidden="true">×</button>
+                        <h4 class="modal-title" id="myModalLabel2">
+                            查看周报操作
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="space-4"></div>
+                                <div class="form-group">
+                                    <a class="dc_word" href="#"><button type="button" class="btn btn-xs btn-info"><i class="ace-icon fa fa-download bigger-110"></i>导出为word</button>
+                                    </a>
+                                </div>
+                                <div class="space-4"></div>
+
+                                <div class="form-group panel panel-info">
+                                    <table class="table table-bordered" id="chakan-table">
+                                        <tbody>
+                                        <tr>
+                                            <td style="width:25%;font-weight:600;vertical-align: middle !important; ">上级领导</td>
+                                            <td style="width:75%"></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width:25%;font-weight:600;vertical-align: middle !important;">周报日期</td>
+                                            <td style="width:75%"></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width:25%;font-weight:600;vertical-align: middle !important;">本月第几周</td>
+                                            <td style="width:75%"></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width:25%;font-weight:600;vertical-align: middle !important;">本周工作</td>
+                                            <td style="width:75%"></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width:25%;font-weight:600;vertical-align: middle !important;">下周工作计划</td>
+                                            <td style="width:75%"></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width:25%;font-weight:600;vertical-align: middle !important;">存在问题改进措施建议</td>
+                                            <td style="width:75%"></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width:25%;font-weight:600;vertical-align: middle !important;">上级评价</td>
+                                            <td style="width:75%"></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default gbbb">
+                                            关闭
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+{/block}
+{block name="scripts"}
+<script type="text/javascript" src="__PUBLIC__/sldate/moment.js"></script>
+<script type="text/javascript" src="__PUBLIC__/sldate/daterangepicker.js"></script>
+<script type="text/javascript">
+    $('.date-picker').datepicker({  //日期出问题，编辑的日期无法获取到
+        autoclose: true,
+        todayHighlight: true,
+        language: 'zh-CN',
+    }).on('changeDate',function(){
+        //获取选择的日期，然后显示出第几周
+        var v = $(".addtime1").val();
+        var v1 = $("#zb_edit_time").val();
+        if(v != ''){
+            var date = v.split("-");
+            var a = date[0]; //年
+            var b = date[1]; //月
+            var c = date[2]; //日
+            //调用生成本月第几周函数
+            var w = getMonthWeek(a,b,c); //返回第几周
+            $("#weeks1").attr('value',(parseInt(b) - 0)+'月第'+w+'周');
+        }
+        if(v1 != ''){
+            var date = v1.split("-");
+            var a = date[0]; //年
+            var b = date[1]; //月
+            var c = date[2]; //日
+            //调用生成本月第几周函数
+            var w = getMonthWeek(a,b,c); //返回第几周
+            $("#zb_edit_weeks").attr('value',(parseInt(b) - 0)+'月第'+w+'周');
+        }
+    });
+    $('#reservation').daterangepicker(null, function (start, end, label) {
+        console.log(start.toISOString(), end.toISOString(), label);
+    });
+    $("#select-3").select2({
+        placeholder: "周报人员",
+        allowClear: true,
+    });
+    $("#select-4").select2({
+        placeholder: "上级领导",
+        allowClear: true,
+    });
+    $("#select-5").select2({
+        placeholder: "上级领导",
+        allowClear: true,
+    });
+    $(".select2-selection__clear").html('');
+    $.fn.modal.Constructor.prototype.enforceFocus = function () {
+    }; //重新获取焦点
+</script>
+{/block}

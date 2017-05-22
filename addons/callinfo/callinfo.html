@@ -1,0 +1,34 @@
+<div class="widget-box sl-indextop10 text-left">
+	<div class="widget-header">
+		<h5 class="widget-title"><span style="font-size:14px; font-family:Microsoft YaHei">分配任务提醒</span></h5>
+	</div>
+	<div class="widget-body">
+		<div class="widget-main">
+			<p class="alert alert-success">
+				<span style="font-size: 13px;font-weight: 800;" id="my_task">我的任务：<a href="#">{$task_sum}</a></span><br />
+				<span style="font-size: 13px;font-weight: 800;" id="js_task">已接收任务：<a href="#">{$js_task}</a></span><br />
+				<span style="font-size: 13px;font-weight: 800;" id="wjs_task">未接收任务：<a href="#">{$wjs_task}</a></span><br />
+				<span style="font-size: 13px;font-weight: 800;" id="wfb_task">我发布的问题(未关闭)：<a href="#">{$wfb_task}</a></span><br />
+				<span style="font-size: 13px;font-weight: 800;" id="wwsh_task">我发布的任务记录(包含关闭、未关闭)：<a href="#">{$wfb_task_all}</a></span>
+			</p>
+		</div>
+	</div>
+</div>
+<!--点击今日分配，发送链接到相关的页面，并且发送相关的数据-->
+<script>
+	$("#my_task").click(function(){
+		window.location.href = "{:url('admin/Task/issue_list',array('renwu'=>0))}";
+	});
+	$("#js_task").click(function(){
+		window.location.href = "{:url('admin/Task/issue_list',array('renwu'=>0,'zhuangt'=>12))}";
+	});
+	$("#wjs_task").click(function(){
+		window.location.href = "{:url('admin/Task/issue_list',array('renwu'=>0,'zhuangt'=>11))}";
+	});
+	$("#wfb_task").click(function(){
+		window.location.href = "{:url('admin/Task/issue_list',array('fabry'=>$Think.session.admin_auth.aid))}";
+	});
+	$("#wwsh_task").click(function(){
+		window.location.href = "{:url('admin/Task/task_log',array('renwu'=>1))}";
+	});
+</script>

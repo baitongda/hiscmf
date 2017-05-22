@@ -1,0 +1,224 @@
+{extend name="admin@public/base" /}
+{block name="main-content"}
+<div class="page-content">
+    <link rel="stylesheet" type="text/css" media="all" href="__PUBLIC__/sldate/daterangepicker-bs3.css"/>
+    <form name="" class="" id="list-filter" method="post" action="{:url('admin/Weeklog/weeklog_xiashu')}">
+        <div class="row maintop">
+            <div class="col-xs-12 col-sm-12 maintop">
+                <select name="sjld" class="ajax_change" id="select-4" >
+                    <option value="">上级领导</option>
+                    {foreach admin_list as $k=>$v}
+                    <option value="{$v['admin_id']}">{$v['admin_realname']}</option>
+                    {/foreach}
+                </select>
+                <select name="admin_id" class="ajax_change" id="select-3" >
+                    <option value="">周报人员</option>
+                    {foreach admin_list as $k=>$v}
+                    <option value="{$v['admin_id']}">{$v['admin_realname']}</option>
+                    {/foreach}
+                </select>
+                <select name="bum" class="ajax_change" id="select-6" >
+                    <option value="">部门</option>
+                    {foreach bum as $k=>$v}
+                    {if $v.id != 1 && $v.id != 2}
+                    <option value="{$v['title']}">{$v['title']}</option>
+                    {/if}
+                    {/foreach}
+                </select>
+            </div>
+            <div class="col-xs-4 col-sm-3 btn-sespan">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-calendar fa fa-calendar"></i></span>
+                    <input type="text" name="reservation" id="reservation" class="sl-date" value="" placeholder="点击选择日期范围"/>
+                </div>
+            </div>
+            <div class="col-xs-8 col-sm-8">
+                <a href="{:url('admin/Weeklog/weeklog_xiashu')}">
+                    <button type="button" class="btn btn-xs btn-success">
+                        <i class="ace-icon fa fa-recycle bigger-110"></i>
+                        全部
+                    </button>
+                </a>
+                <a href="{:url('admin/Weeklog/weeklog_xiashu',array('ready'=>'1'))}">
+                    <button type="button" class="btn btn-xs btn-success">
+                        <i class="ace-icon fa fa-check bigger-110"></i>
+                        已查看
+                    </button>
+                </a>
+                <a href="{:url('admin/Weeklog/weeklog_xiashu',array('ready'=>'0'))}">
+                    <button type="button" class="btn btn-xs btn-danger">
+                        <i class="ace-icon fa fa-remove bigger-110"></i>
+                        未查看
+                    </button>
+                </a>
+            </div>
+        </div>
+    </form>
+    <div class="row">
+        <div class="col-xs-12">
+            <div>
+                <form id="alldel" name="alldel" method="post" action="{:url('admin/Task/issue_list')}">
+                    <div class="table-responsive">
+                        <table id="issueTable" class="table table-bordered table-hover ">
+                            <thead>
+                            <tr>
+                                <th class="hidden-xs" style="width: 5%;">ID</th>
+                                <th style="width: 7%;">部门</th>
+                                <th class="" style="width: 5%;">人员</th>
+                                <th class="" style="width: 15%;">本周内容</th>
+                                <th class="" style="width: 15%;">下周计划</th>
+                                <th class="" style="width: 15%;">问题建议</th>
+                                <th class="" style="width: 12%;">上级评价</th>
+                                <th class="" style="width: 7%;">上传的周报</th>
+                                <th class="" style="width: 7%;">提交时间</th>
+                                <th class="" style="width: 5%;">标志</th>
+                                <!--<th class="">操作时间</th>-->
+                                <th class="" style="width: 8%;">操作</th>
+                            </tr>
+                            </thead>
+                            <tbody id="ajax-data">
+                                {include file="weeklog/ajax_weeklog_xiashu"/}
+                            </tbody>
+                        </table>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- 显示已经提交周报动态框（Modal） -->
+    <div class="modal fade in" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
+        <form class="form-horizontal ajaxForm" name="runedit" method="post" action="">
+            <input type="hidden" name="id" id="weeklog_id1" value="" />
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close gbb" aria-hidden="true">×</button>
+                        <h4 class="modal-title" id="myModalLabel1">
+                            查看周报操作
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="space-4"></div>
+                                <div class="form-group">
+                                    <a class="dc_word" href="#"><button type="button" class="btn btn-xs btn-info"><i class="ace-icon fa fa-download bigger-110"></i>导出为word</button>
+                                    </a>
+                                </div>
+                                <div class="space-4"></div>
+
+                                <div class="form-group panel panel-info">
+                                    <table class="table table-bordered" id="chakan-table">
+                                        <tbody>
+                                        <tr>
+                                            <td style="width:25%;font-weight:600;vertical-align: middle !important; ">上级领导</td>
+                                            <td style="width:75%"></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width:25%;font-weight:600;vertical-align: middle !important;">周报日期</td>
+                                            <td style="width:75%"></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width:25%;font-weight:600;vertical-align: middle !important;">本月第几周</td>
+                                            <td style="width:75%"></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width:25%;font-weight:600;vertical-align: middle !important;">本周工作</td>
+                                            <td style="width:75%"></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width:25%;font-weight:600;vertical-align: middle !important;">下周工作计划</td>
+                                            <td style="width:75%">1</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width:25%;font-weight:600;vertical-align: middle !important;">存在问题改进措施建议</td>
+                                            <td style="width:75%"></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width:25%;font-weight:600;vertical-align: middle !important;">上级评价</td>
+                                            <td style="width:75%"></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default gbb">
+                                            关闭
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- 显示评论周报动态框（Modal） -->
+    <div class="modal fade in" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2" aria-hidden="true">
+        <form class="form-horizontal ajaxForm" name="runcomment" method="post" action="{:url('admin/Weeklog/weeklog_runcomment')}">
+            <input type="hidden" name="id" id="weeklog_id2" value="" />
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close gbbb" aria-hidden="true">×</button>
+                        <h4 class="modal-title" id="myModalLabel2">
+                            查看周报操作
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="space-4"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label no-padding-right">点评:</label>
+                                    <div class="col-sm-10">
+                                        <textarea name="sj_comment" id="sj_comment" rows="8%" class="col-xs-10 col-sm-10" required></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-default">
+                            提交
+                        </button>
+                        <button type="button" class="btn btn-default gbbb">
+                            关闭
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{/block}
+{block name="scripts"}
+<script type="text/javascript" src="__PUBLIC__/sldate/moment.js"></script>
+<script type="text/javascript" src="__PUBLIC__/sldate/daterangepicker.js"></script>
+<script type="text/javascript">
+    $('#reservation').daterangepicker(null, function (start, end, label) {
+        console.log(start.toISOString(), end.toISOString(), label);
+    });
+    $("#select-3").select2({
+        placeholder: "周报人员",
+        allowClear: true,
+    });
+    $("#select-4").select2({
+        placeholder: "上级领导",
+        allowClear: true,
+    });
+    $("#select-5").select2({
+        placeholder: "周报人员",
+        allowClear: true,
+    });
+    $("#select-6").select2({
+        placeholder: "部门",
+        allowClear: true,
+    });
+    $(".select2-selection__clear").html('');
+    $.fn.modal.Constructor.prototype.enforceFocus = function () {
+    }; //重新获取焦点
+</script>
+{/block}

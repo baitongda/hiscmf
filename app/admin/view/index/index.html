@@ -1,0 +1,188 @@
+{extend name="admin@public/base" /}
+{block name="main-content"}
+<div class="page-content">
+    <div class="row">
+        <div class="col-xs-12">
+            <!-- 提示 -->
+            <div class="alert alert-block alert-success">
+                <button type="button" class="close" data-dismiss="alert">
+                    <i class="ace-icon fa fa-times"></i>
+                </button>
+                <i class="ace-icon fa fa-check green"></i>
+                本系统是在谷歌浏览器开发调试的，所以建议你安装chrome谷歌浏览器 ，最好屏幕分辨率调到1280*768以上，此系统也兼容手机移动端 ——— <a
+                    href="{:url('admin/Help/soft')}">进入软件下载专区</a>
+            </div>
+            <div class="row">
+                <div class="space-6"></div>
+                {if $xx==2}
+                <div class="col-sm-7 infobox-container">
+                    <div class="infobox infobox-green col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                        <div class="infobox-icon">
+                            <i class="ace-icon fa fa-folder"></i>
+                        </div>
+                        <div class="infobox-data">
+                            <span class="infobox-data-number">{$new_issue_count}</span>
+                            <div class="infobox-content">今日新增问题</div>
+                        </div>
+                        <div class="stat {if $difday_i < 1}stat-important{else}stat-success{/if}">
+                            {:round($difday_i,0)}%
+                        </div>
+                    </div>
+                    <div class="infobox infobox-blue col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                        <div class="infobox-icon">
+                            <i class="ace-icon fa fa-user"></i>
+                        </div>
+                        <div class="infobox-data">
+                            <span class="infobox-data-number">{$new_admin_count}</span>
+                            <div class="infobox-content">今日增加人员</div>
+                        </div>
+                        <div class="stat {if $difday_a < 1}stat-important{else}stat-success{/if}">
+                            {:round($difday_a,0)}%
+                        </div>
+                    </div>
+                    <div class="infobox infobox-pink col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                        <div class="infobox-icon">
+                            <i class="ace-icon fa fa-user-md"></i>
+                        </div>
+                        <div class="infobox-data">
+                            <span class="infobox-data-number">{$new_solve_count}</span>
+                            <div class="infobox-content">今日解决问题</div>
+                        </div>
+                        <div class="stat {if $difday_s < 1}stat-important{else}stat-success{/if}">
+                            {:round($difday_s,0)}%
+                        </div>
+                    </div>
+                    <div class="infobox infobox-orange infobox-dark col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                        <div class="infobox-icon">
+                            <i class="ace-icon fa fa-folder"></i>
+                        </div>
+
+                        <div class="infobox-data">
+                            <div class="infobox-content">总问题数目</div>
+                            <a href="{:url('admin/Task/issue_list')}">
+                                <div class="infobox-content">{$issue_count}</div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="infobox infobox-green infobox-dark col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                        <div class="infobox-icon">
+                            <i class="ace-icon fa fa-users"></i>
+                        </div>
+                        <div class="infobox-data">
+                            <div class="infobox-content">总人员数目</div>
+                            <a href="{:url('admin/Admin/admin_list')}">
+                                <div class="infobox-content">{$admin_count}</div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="infobox infobox-orange2 infobox-dark col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                        <div class="infobox-icon">
+                            <i class="ace-icon fa fa-user-md"></i>
+                        </div>
+                        <div class="infobox-data">
+                            <div class="infobox-content">总解决问题数目</div>
+                            <a href="{:url('admin/Task/issue_list')}">
+                                <div class="infobox-content">{$solve_count}</div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="space-6"></div>
+                        </div>
+                    </div>
+                    {:hook('userinfo')}
+                    {:hook('gitinfo')}
+                    {:hook('sysinfo')}
+                    {:hook('team')}
+                </div>
+                {else}{:hook('userinfo')}{/if}
+                <div class="vspace-12-sm"></div>
+                <div class="col-sm-5">
+                    {if $xx==2}{:hook('callinfo')}{/if}
+                    <div class="space-4"></div>
+                    <div class="space-4"></div>
+                    {:hook('issueswarn')}
+                    <div class="space-4"></div>
+                    <div class="space-4"></div>
+                    {:hook('admininfo')}
+                    <div class="space-4"></div>
+                    <div class="space-4"></div>
+                    {:hook('maintain')}
+                    <div class="space-4"></div>
+                    <div class="space-4"></div>
+                    {if $xx==2}
+                    <div class="widget-box widget-color-blue">
+                        <div class="widget-header">
+                            <h5 class="widget-title bigger lighter sl-font14">
+                                <i class="ace-icon fa fa-table"></i>
+                                <span style="font-size:14px; font-family:Microsoft YaHei">解决问题牛人排行</span>
+                            </h5>
+                        </div>
+                        <div class="widget-body">
+                            <div class="widget-main no-padding">
+                                <table class="table table-striped table-bordered table-hover">
+                                    <thead class="thin-border-bottom">
+                                    <tr>
+                                        <th width="30%">所属部门</th>
+                                        <th width="30%">名字</th>
+                                        <th width="17%"><em>解决问题次数</em></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {foreach arr as $k=>$v}
+                                    <tr>
+                                        <td height="25">{foreach bm as $k1=>$v1}{if
+                                            $v1['admin_id']==$k}{$v1['title']}{/if}{/foreach}
+                                        </td>
+                                        <td height="25">{foreach admin_list as $k1=>$v1}{if
+                                            $v1['admin_id']==$k}{$v1['admin_realname']}{/if}{/foreach}
+                                        </td>
+                                        <td>{$v['count']}</td>
+                                    </tr>
+                                    {/foreach}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    {/if}
+                </div>
+            </div><!-- /.row -->
+        </div><!-- /.col -->
+    </div><!-- /.row -->
+</div>
+<script>
+    //右下角弹出周报未交提醒
+    //边缘弹出
+    if("{$zbts}" == '0'){
+        layer.open({
+            type: 1
+            ,offset: 'rb' //具体配置参考：offset参数项
+            ,title: ['本周周报提醒', 'font-size:18px;']
+            ,content: '<div style="padding: 20px;font-weight: 500;font-size: 15px;">你本周周报没上交，请尽快上交周报！</div>'
+            ,area: ['300px', '200px']
+            ,shade: 0 //不显示遮罩
+            //,time: 30000 //30秒自动关闭
+            ,anim: 2
+            ,yes: function(){
+                layer.closeall();
+            }
+        });
+    }
+
+    layer.open({
+        type: 1
+        ,offset: 'rb' //具体配置参考：offset参数项
+        ,title: ['靠近完成日期任务', 'font-size:18px;']
+        ,content: '<div style="padding: 20px;font-weight: 500;font-size: 15px;">你有<span style="color: red;">{$bug_list_count}</span>个任务靠近完成日期，请尽快完成！或者把任务分配出去。</div>'
+        ,area: ['300px', '200px']
+        ,shade: 0 //不显示遮罩
+        ,time: 20000 //20秒自动关闭
+        ,anim: 2
+        ,yes: function(){
+            layer.closeall();
+        }
+    });
+</script>
+{/block}

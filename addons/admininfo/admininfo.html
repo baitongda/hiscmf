@@ -1,0 +1,31 @@
+<div class="widget-box sl-indextop10 text-left">
+    <div class="widget-header">
+        <h5 class="widget-title"><span style="font-size:14px; font-family:Microsoft YaHei">各部门负责人</span></h5>
+    </div>
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            <table class="table table-striped table-bordered table-hover">
+                <thead class="thin-border-bottom">
+                <tr>
+                    <th width="15%">部门</th>
+                    <th width="20%">姓名</th>
+                    <th width="20%">QQ</th>
+                    <th width="30%">邮箱</th>
+                </tr>
+                </thead>
+                <tbody>
+                {foreach arr as $k=>$v}
+                {if $v.id!=7 && $v.id!=1 && $v.id!=2}
+                <tr>
+                    <td height="25">{$v.title}</td>
+                    <td>{foreach $admin as $k1=>$v1}{if $v1.admin_id==$v.bumjl}{$v1.admin_realname}{/if}{/foreach}</td>
+                    <td>{foreach $admin as $k1=>$v1}{if $v1.admin_id==$v.bumjl}{$v1.admin_qq}{/if}{/foreach}</td>
+                    <td>{foreach $admin as $k1=>$v1}{if $v1.admin_id==$v.bumjl}{$v1.admin_email}{/if}{/foreach}</td>
+                </tr>
+                {/if}
+                {/foreach}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

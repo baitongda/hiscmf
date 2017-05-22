@@ -1,0 +1,224 @@
+{extend name="admin@public/base" /}
+{block name="main-content"}
+<div class="page-content">
+    <!--主题-->
+    <div class="page-header">
+        <h1>
+            您当前操作
+            <small>
+                <i class="ace-icon fa fa-angle-double-right"></i>
+                添加任务
+            </small>
+        </h1>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <form class="form-horizontal" name="form0" method="post"
+                  action="{:url('admin/Task/issue_runadd')}" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label no-padding-right"> 负责人： </label>
+                    <div class="col-sm-10">
+                        <select name="jiedfzr" id="select-1" class="col-xs-10 col-sm-4" required>
+                            <option value="">请选择阶段负责人</option>
+                            {foreach name="admin_list" item="v"}
+                            <option value="{$v.admin_id}">{$v.admin_realname}</option>
+                            {/foreach}
+                        </select>
+                    </div>
+                </div>
+                <div class="space-4"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label no-padding-right"> 产品名称： </label>
+                    <div class="col-sm-10">
+                        <select name="chanpid" class="col-xs-10 col-sm-4" id="select-2" required>
+                            <option value="">请选择产品</option>
+                            {foreach name="cp_list" item="v"}
+                            <option value="{$v.chanpid}">{$v.chanpmc}</option>
+                            {/foreach}
+                        </select>
+                    </div>
+                </div>
+                <div class="space-4"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label no-padding-right"> 请选择项目名称： </label>
+                    <div class="col-sm-10">
+                        <select name="xiangmid" class="col-xs-10 col-sm-4" id="select-3" required>
+                            <option value="">请选择项目</option>
+                            {foreach name="xm_list" item="v"}
+                            <option value="{$v.xiangmid}">{$v.xiangmmc}</option>
+                            {/foreach}
+                        </select>
+                    </div>
+                </div>
+                <div class="space-4"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label no-padding-right"> 任务类型： </label>
+                    <div class="col-sm-10">
+                        <select name="renwlx" class="col-xs-10 col-sm-4" required>
+                            <option value="">请选择类型</option>
+                            {foreach name="rwlx_list" item="v"}
+                            <option value="{$v.daimid}">{$v.daimmc}</option>
+                            {/foreach}
+                        </select>
+                    </div>
+                </div>
+                <div class="space-4"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label no-padding-right"> 优先等级： </label>
+                    <div class="col-sm-10">
+                        <select name="youxjb" class="col-xs-10 col-sm-4" required>
+                            <option value="">请选择优先等级</option>
+                            {foreach name="yxj_list" item="v"}
+                            <option value="{$v.daimid}" {if condition="$v['daimid'] eq 2"}selected{/if}>{$v.daimmc}</option>
+                            {/foreach}
+                        </select>
+                    </div>
+                </div>
+                <div class="space-4"></div>
+
+                <!--隐藏发送状态标志-->
+                <input type="hidden" name="biaoz" value="41">
+                <!--<div class="form-group">
+                    <label class="col-sm-2 control-label no-padding-right"> 状态标志： </label>
+                    <div class="col-sm-10">
+                        <select name="biaoz" class="col-xs-10 col-sm-4" required>
+                            {foreach name="ztbz_list" item="v"}
+                            {if $v['daimid'] eq 41}
+                            <option value="{$v.daimid}" {if $v['daimid'] eq 41}selected{/if}>{$v.daimmc}</option>
+                            {/if}
+                            {/foreach}
+                        </select>
+                   </div>
+                </div>
+                <div class="space-4"></div>-->
+
+                <!--<div class="form-group">
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1"> 问题标题： </label>
+                    <div class="col-sm-10">
+                        <input type="text" name="news_title" id="news_title" placeholder="必填：问题标题"
+                               class="col-xs-10 col-sm-6" required/>
+                       &lt;!&ndash; <input type="text" name="news_titleshort" id="news_titleshort" placeholder="简短标题，建议6~12字数"
+                               class="col-xs-10 col-sm-4" style="margin-left:10px;"/>&ndash;&gt;
+                        <span class="help-inline col-xs-12 col-sm-7">
+												<span class="middle" id="resone"></span>
+											</span>
+                    </div>
+                </div>
+                <div class="space-4"></div>-->
+
+                <!--<div class="form-group">
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1"> 问题备注： </label>
+                    <div class="col-sm-10">
+                        <input type="text" name="news_key" id="news_key" placeholder="输入备注"
+                               class="col-xs-10 col-sm-6"/>
+                    </div>
+                </div>
+                <div class="space-4"></div>-->
+
+                <!--预留审核模块，现在默认都是需要审核才能通过的-->
+                <!--<div class="form-group">
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1"> 是否审核： </label>
+                    <div class="col-sm-10" style="padding-top:5px;">
+                        <input name="shbz" id="shbz" value="1" class="ace ace-switch ace-switch-4 btn-flat"  type="checkbox"/>
+                        <span class="lbl">&nbsp;&nbsp;默认关闭</span>
+                    </div>
+                </div>-->
+                <div class="space-4"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label no-padding-right"> 要求完成日期： </label>
+                    <div class="col-sm-10">
+                        <input type="text" name="yaoqwcsj" class="date-picker col-xs-10 col-sm-4" value="" required>
+                    </div>
+                </div>
+                <div class="space-4"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label no-padding-right"> 模块名称： </label>
+                    <div class="col-sm-10">
+                        <input type="text" name="mk_name" id="" value="" class="col-xs-10 col-sm-4"/>
+                    </div>
+                </div>
+                <div class="space-4"></div>
+                <!--隐藏发送发布人员-->
+                <input type="hidden" name="fabry" value="{:session('admin_auth.admin_realname')}">
+                <!--<div class="form-group">
+                    <label class="col-sm-2 control-label no-padding-right"> 问题提交人： </label>
+                    <div class="col-sm-10">
+                        <input type="text" name="fabry" id="news_source"
+                               value="{:session('admin_auth.admin_realname')}"
+                               class="col-xs-10 col-sm-4" readonly/>
+                    </div>
+                </div>
+                <div class="space-4"></div>-->
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label no-padding-right"> 问题标题： </label>
+                    <div class="col-sm-9">
+                        <input type="text" name="renwbt" id="news_scontent" class="col-xs-10 col-sm-8"
+                               maxlength="150" required/>
+                        <label class="input_last">已限制在150个字以内</label>
+                    </div>
+                </div>
+                <div class="space-4"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label no-padding-right" for="form-field-1" style="font-weight:900;"> 问题内容 </label>
+                    <div class="col-sm-10">
+                        <script src="__PUBLIC__/ueditor/ueditor.config.js" type="text/javascript"></script>
+                        <script src="__PUBLIC__/ueditor/ueditor.all.js" type="text/javascript"></script>
+                        <textarea name="renwnr" rows="100%" style="width:100%" id="myEditor" required></textarea>
+                        <script type="text/javascript">
+                            var editor = new UE.ui.Editor();
+                            editor.render("myEditor");
+                        </script>
+                    </div>
+                </div>
+                <div class="space-4"></div>
+
+                <div class="clearfix form-actions">
+                    <div class="col-md-offset-3 col-md-9">
+                        <button class="btn btn-info" type="submit">
+                            <i class="ace-icon fa fa-check bigger-110"></i>
+                            提交
+                        </button>
+
+                        &nbsp; &nbsp; &nbsp;
+                        <button class="btn" type="reset">
+                            <i class="ace-icon fa fa-undo bigger-110"></i>
+                            重置
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div><!-- /.page-content -->
+{/block}
+{block name="scripts"}
+<script>
+    $('.date-picker').datepicker({
+        autoclose: true,
+        todayHighlight: true,
+        language: 'zh-CN',
+    });
+    $("#select-1").select2({
+        placeholder: "请选择阶段负责人",
+        allowClear:true,
+    });
+    $("#select-2").select2({
+        placeholder: "请选择产品名称",
+        allowClear:true,
+    });
+    $("#select-3").select2({
+        placeholder: "请选择项目名称",
+        allowClear:true,
+    });
+    $(".select2-selection__clear").html('');
+</script>
+{/block}

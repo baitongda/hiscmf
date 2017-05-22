@@ -1,0 +1,19 @@
+<div class="widget-box sl-indextop10 text-left">
+	<div class="widget-header">
+		<h5 class="widget-title"><span style="font-size:14px; font-family:Microsoft YaHei">用户登录信息</span></h5>
+	</div>
+	<div class="widget-body">
+		<div class="widget-main">
+			<p class="alert alert-success">
+				<span style="font-size: 13px;font-weight: 800;">登录名：{$admin_info.admin_username}</span><br />
+				<span style="font-size: 13px;font-weight: 800;">姓名：{$admin_info.admin_realname}</span><br />
+				<span style="font-size: 13px;font-weight: 800;">部门：{$bm}</span><br />
+				<span style="font-size: 13px;font-weight: 800;">登录次数：{$admin_info.admin_hits}<a href="#"></a></span><br />
+				<span style="font-size: 13px;font-weight: 800;">上次登录时间：{:date('Y-m-d H:i:s',$admin_info.admin_last_time)}&nbsp;&nbsp;{:date('l',$admin_info.admin_last_time)}</span><br />
+				<span style="font-size: 13px;font-weight: 800;">今天登录时间：{:date('Y-m-d H:i:s',time())}&nbsp;&nbsp;{:date('l',$admin_info.admin_last_time)}</span><br />
+				<span style="font-size: 13px;font-weight: 800;">登录ip：{$admin_info.admin_ip}</span><br />
+				<span style="font-size: 13px;font-weight: 800;">上次登录ip：{$admin_info.admin_last_ip}</span>
+			</p>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,1595 @@
+/************************************************************* 所有带确认的ajax提交btn ********************************************************/
+/* get执行并返回结果，执行后不带跳转 */
+$(function () {
+	$('body').on('click','.rst-btn',function () {
+        var $url = this.href;
+        $.get($url, function (data) {
+            if (data.code == 1) {
+                layer.alert(data.msg, {icon: 6});
+            } else {
+                layer.alert(data.msg, {icon: 5});
+            }
+        }, "json");
+        return false;
+    });
+});
+/* get执行并返回结果，执行后带跳转 */
+$(function () {
+	$('body').on('click','.rst-url-btn',function () {
+        var $url = this.href;
+        $.get($url, function (data) {
+            if (data.code==1) {
+                layer.alert(data.msg, {icon: 6}, function (index) {
+                    layer.close(index);
+                    window.location.href = data.url;
+                });
+            } else {
+                layer.alert(data.msg, {icon: 5}, function (index) {
+                    layer.close(index);
+                });
+            }
+        }, "json");
+        return false;
+    });
+});
+/* 直接跳转 */
+$(function () {
+	$('body').on('click','.confirm-btn',function () {
+        var $url = this.href,
+            $info = $(this).data('info');
+        layer.confirm($info, {icon: 3}, function (index) {
+            layer.close(index);
+            window.location.href = $url;
+        });
+        return false;
+    });
+});
+/* post执行并返回结果，执行后不带跳转 */
+$(function () {
+	$('body').on('click','.confirm-rst-btn',function () {
+        var $url = this.href,
+            $info = $(this).data('info');
+        layer.confirm($info, {icon: 3}, function (index) {
+            layer.close(index);
+            $.post($url, {}, function (data) {
+                layer.alert(data.msg, {icon: 6});
+            }, "json");
+        });
+        return false;
+    });
+});
+/* get执行并返回结果，执行后带跳转 */
+$(function () {
+	$('body').on('click','.confirm-rst-url-btn',function () {
+        var $url = this.href,
+            $info = $(this).data('info');
+        layer.confirm($info, {icon: 3}, function (index) {
+            layer.close(index);
+            $.get($url, function (data) {
+                if (data.code==1) {
+                    layer.alert(data.msg, {icon: 6}, function (index) {
+                        layer.close(index);
+                        window.location.href = data.url;
+                    });
+                } else {
+                    layer.alert(data.msg, {icon: 5}, function (index) {
+                        layer.close(index);
+                    });
+                }
+            }, "json");
+        });
+        return false;
+    });
+});
+$(function () {
+    $('body').on('click','.confirm-url-btn',function () {
+        var $url = this.href,
+            $info = $(this).data('info');
+        layer.confirm($info, {icon: 3}, function (index) {
+            layer.close(index);
+            window.location.href = $url;
+        });
+        return false;
+    });
+});
+/*************************************************************************** 所有状态类的ajax提交btn ********************************************************/
+/* 审核状态操作 */
+$(function () {
+	$('body').on('click','.state-btn',function () {
+        var $url = this.href,
+            val = $(this).data('id'),
+            $btn=$(this);
+        $.post($url, {x: val}, function (data) {
+            if (data.code==1) {
+                if (data.msg == '未审') {
+                    var a = '<button class="btn btn-minier btn-danger">未审</button>';
+                    $btn.children('div').html(a).attr('title','未审');
+                    return false;
+                } else {
+                    var b = '<button class="btn btn-minier btn-yellow">已审</button>';
+                    $btn.children('div').html(b).attr('title','已审');
+                    return false;
+                }
+            } else {
+                layer.alert(data.msg, {icon: 5});
+            }
+        }, "json");
+        return false;
+    });
+});
+$(function () {
+	$('body').on('click','#btnorder',function () {
+        var $url=$(this).attr("href");
+        if(!$url){
+            $url=$(this).parents('form').attr('action');
+        }
+        $.post($url, $("input.list_order").serialize(), function (data) {
+            if (data.code==1) {
+                layer.alert(data.msg, {icon: 6}, function (index) {
+					window.location.href = data.url;
+                    layer.close(index);
+                });
+            }else{
+                layer.alert(data.msg, {icon: 5}, function (index) {
+                    layer.close(index);
+                });
+            }
+        }, "json");
+        return false;
+    });
+});
+/* 启用状态操作 */
+$(function () {
+	$('body').on('click','.open-btn',function () {
+        var $url = this.href,
+            val = $(this).data('id'),
+            $btn=$(this);
+        $.post($url, {x: val}, function (data) {
+            //console.log(data.msg);
+            if (data.code==1) {
+                if (data.msg == '状态禁止') {
+                    var a = '<button class="btn btn-minier btn-danger">禁用</button>';
+                    $btn.children('div').html(a).attr('title','已禁用');
+                    return false;
+                } else {
+                    var b = '<button class="btn btn-minier btn-yellow">开启</button>';
+                    $btn.children('div').html(b).attr('title','已开启');
+                    return false;
+                }
+            } else {
+                layer.alert(data.msg, {icon: 5});
+            }
+        }, "json");
+        return false;
+    });
+});
+/* 显示状态操作 */
+$(function () {
+	$('body').on('click','.display-btn',function () {
+        var $url = this.href,
+            val = $(this).data('id'),
+            $btn=$(this);
+        $.post($url, {x: val}, function (data) {
+            if (data.code==1) {
+                if (data.msg == '状态禁止') {
+                    var a = '<button class="btn btn-minier btn-danger">隐藏</button>';
+                    $btn.children('div').html(a).attr('title','已隐藏');
+                    return false;
+                } else {
+                    var b = '<button class="btn btn-minier btn-yellow">显示</button>';
+                    $btn.children('div').html(b).attr('title','已显示');
+                    return false;
+                }
+            } else {
+                layer.alert(data.msg, {icon: 5});
+            }
+        }, "json");
+        return false;
+    });
+});
+/* 检测状态操作 */
+$(function () {
+    $('body').on('click','.notcheck-btn',function () {
+        var $url = this.href,
+            val = $(this).data('id'),
+            $btn=$(this);
+        $.post($url, {x: val}, function (data) {
+            if (data.code==1) {
+                if (data.msg == '检测') {
+                    var a = '<button class="btn btn-minier btn-yellow">检测</button>';
+                    $btn.children('div').html(a).attr('title','检测');
+                    return false;
+                } else {
+                    var b = '<button class="btn btn-minier btn-danger">不检测</button>';
+                    $btn.children('div').html(b).attr('title','不检测');
+                    return false;
+                }
+            } else {
+                layer.alert(data.msg, {icon: 5});
+            }
+        }, "json");
+        return false;
+    });
+});
+/* 审核状态操作 */
+$(function () {
+	$('body').on('click','.shenhe-btn',function () {
+        var $url = this.href,
+            val = $(this).data('id'),
+            $btn=$(this);
+        $.post($url, {x: val}, function (data) {
+            if (data.code==1) {
+                if (data.msg == '未审核') {
+                    var a = '<button class="btn btn-minier btn-danger">未审核</button>';
+                    $btn.children('div').html(a).attr('title','未审核');
+                    return false;
+                }else{
+                    var a = '<button class="btn btn-minier btn-yellow">已审核</button>';
+                    $btn.children('div').html(a).attr('title','已审核');
+                    return false;
+                }
+            } else {
+                layer.alert(data.msg, {icon: 5});
+            }
+        }, "json");
+        return false;
+    });
+});
+/* 激活状态操作 */
+$(function () {
+    $('body').on('click','.active-btn',function () {
+        var $url = this.href,
+            val = $(this).data('id'),
+            $btn=$(this);
+        $.post($url, {x: val}, function (data) {
+            if (data.code==1) {
+                if (data.msg == '未激活') {
+                    var a = '<button class="btn btn-minier btn-danger">未激活</button>';
+                    $btn.children('div').html(a).attr('title','未激活');
+                    return false;
+                } else {
+                    var b = '<button class="btn btn-minier btn-yellow">已激活</button>';
+                    $btn.children('div').html(b).attr('title','已激活');
+                    return false;
+                }
+            } else {
+                layer.alert(data.msg, {icon: 5});
+            }
+        }, "json");
+        return false;
+    });
+});
+/* 任务状态操作 */
+$(function () {
+    $('body').on('click','.issue-btn',function () {
+        var $url = this.href,
+            val = $(this).data('id'),
+            $btn=$(this);
+        $.post($url, {x: val}, function (data) {
+            if (data.code==1) {
+                if (data.msg == '关闭任务') {
+                    var a = '<button class="btn btn-minier btn-danger">关闭任务</button>';
+                    $btn.children('div').html(a).attr('title','关闭任务');
+                    return false;
+                } else {
+                    var b = '<button class="btn btn-minier btn-danger">已关闭任务</button>';
+                    $btn.children('div').html(b).attr('title','已关闭任务');
+                    return false;
+                }
+            } else {
+                layer.alert(data.msg, {icon: 5});
+            }
+        }, "json");
+        return false;
+    });
+});
+/* 接受任务操作 */
+$(function () {
+    $('body').on('click','.issue_me-btn',function () {
+        var $url = this.href,
+            val = $(this).data('id'),
+            $btn=$(this);
+        $.post($url, {x: val}, function (data) {
+            if (data.code==1) {
+                if (data.msg == '未接受') {
+                    var a = '<button class="btn btn-minier btn-danger">未接受</button>';
+                    $btn.children('div').html(a).attr('title','未接受');
+                    return false;
+                } else {
+                    var b = '<button class="btn btn-minier btn-danger">已接受</button>';
+                    $btn.children('div').html(b).attr('title','已接受');
+                    return false;
+                }
+            } else {
+                layer.alert(data.msg, {icon: 5});
+            }
+        }, "json");
+        return false;
+    });
+});
+/*************************************************************************** 所有ajaxForm提交 ********************************************************/
+/* 通用表单不带检查操作，失败不跳转 */
+$(function () {
+    $('.ajaxForm').ajaxForm({
+        success: complete2, // 这是提交后的方法
+        dataType: 'json'
+    });
+});
+/* 通用表单不带检查操作，失败跳转 */
+$(function () {
+    $('.ajaxForm2').ajaxForm({
+        success: complete, // 这是提交后的方法
+        dataType: 'json'
+    });
+});
+/* 通用含验证码表单不带检查操作，失败不跳转 */
+$(function () {
+    $('.ajaxForm3').ajaxForm({
+        success: complete3, // 这是提交后的方法
+        dataType: 'json'
+    });
+});
+/* 会员增加编辑表单，带检查 */
+$(function () {
+    $('.memberform').ajaxForm({
+        beforeSubmit: checkmemberForm, // 此方法主要是提交前执行的方法，根据需要设置
+        success: complete, // 这是提交后的方法
+        dataType: 'json'
+    });
+});
+/* admin增加编辑表单，带检查 */
+$(function () {
+    $('.adminform').ajaxForm({
+        beforeSubmit: checkadminForm, // 此方法主要是提交前执行的方法，根据需要设置
+        success: complete, // 这是提交后的方法
+        dataType: 'json'
+    });
+});
+/* 多选删除操作 */
+$(function () {
+    $('#alldel').ajaxForm({
+        beforeSubmit: checkselectForm, // 此方法主要是提交前执行的方法，根据需要设置，一般是判断为空获取其他规则
+        success: complete2, // 这是提交后的方法
+        dataType: 'json'
+    });
+});
+//失败跳转
+function complete(data) {
+    if (data.code == 1) {
+        layer.alert(data.msg, {icon: 6}, function (index) {
+            layer.close(index);
+            window.location.href = data.url;
+        });
+    } else {
+        layer.alert(data.msg, {icon: 5}, function (index) {
+            layer.close(index);
+            window.location.href = data.url;
+        });
+        return false;
+    }
+}
+//失败不跳转
+function complete2(data) {
+    if (data.code == 1) {
+        layer.alert(data.msg, {icon: 6}, function (index) {
+            layer.close(index);
+            window.location.href = data.url;
+        });
+    } else {
+        layer.alert(data.msg, {icon: 5}, function (index) {
+            layer.close(index);
+        });
+    }
+}
+//失败不跳转,验证码刷新
+function complete3(data) {
+    if (data.code == 1) {
+        window.location.href = data.url;
+    } else {
+        $("#verify").val('');
+        $("#verify_img").click();
+        layer.alert(data.msg, {icon: 5});
+    }
+}
+//admin表单检查
+function checkadminForm() {
+    var admin_username = $.trim($('input[name="admin_username"]').val()); //获取INPUT值
+    var myReg = /^[\u4e00-\u9fa5]+$/;//验证中文
+    if (admin_username.indexOf(" ") >= 0) {
+        layer.alert('登录用户名包含了空格，请重新输入', {icon: 5}, function (index) {
+            layer.close(index);
+            $('#admin_username').focus();
+        });
+        return false;
+    }
+    if (myReg.test(admin_username)) {
+        layer.alert('用户名必须是字母，数字，符号', {icon: 5}, function (index) {
+            layer.close(index);
+            $('#admin_username').focus();
+        });
+        return false;
+    }
+    if (!$("#admin_tel").val().match(/^(((13[0-9]{1})|(15[0-9]{1})|(17[0-9]{1})|(18[0-9]{1}))+\d{8})$/)) {
+        layer.alert('电话号码格式不正确', {icon: 5}, function (index) {
+            layer.close(index);
+            $('#admin_tel').focus();
+        });
+        return false;
+    }
+}
+//member表单检查
+function checkmemberForm() {
+    if (!$("#member_list_tel").val().match(/^(((13[0-9]{1})|(15[0-9]{1})|(17[0-9]{1})|(18[0-9]{1}))+\d{8})$/)) {
+        layer.alert('电话号码格式不正确', {icon: 5}, function (index) {
+            layer.close(index);
+            $('#member_list_tel').focus();
+        });
+        return false;
+    }
+}
+//多选表单检查
+function checkselectForm() {
+    var chk_value = [];
+    $('input[id="navid"]:checked').each(function () {
+        chk_value.push($(this).val());
+    });
+
+    if (!chk_value.length) {
+        layer.alert('至少选择一个删除项', {icon: 5});
+        return false;
+    }
+}
+/*************************************************************************** 所有css操作 ********************************************************/
+/* 菜单样式 */
+$(function () {
+    //插入header-nav
+    $('#sidebar2').insertBefore('.page-content');
+    $('.navbar-toggle[data-target="#sidebar2"]').insertAfter('#menu-toggler');
+    //固定
+    $(document).on('settings.ace.two_menu', function (e, event_name, event_val) {
+        if (event_name == 'sidebar_fixed') {
+            if ($('#sidebar').hasClass('sidebar-fixed')) {
+                $('#sidebar2').addClass('sidebar-fixed');
+                $('#navbar').addClass('h-navbar');
+            }
+            else {
+                $('#sidebar2').removeClass('sidebar-fixed');
+                $('#navbar').removeClass('h-navbar');
+            }
+        }
+    }).triggerHandler('settings.ace.two_menu', ['sidebar_fixed', $('#sidebar').hasClass('sidebar-fixed')]);
+});
+/* 多选判断 */
+function unselectall() {
+    if (document.myform.chkAll.checked) {
+        document.myform.chkAll.checked = document.myform.chkAll.checked & 0;
+    }
+}
+function CheckAll(form) {
+    for (var i = 0; i < form.elements.length; i++) {
+        var e = form.elements[i];
+        if (e.Name != 'chkAll' && e.disabled == false) {
+            e.checked = form.chkAll.checked;
+        }
+    }
+}
+/* 日期选择器 */
+var dateInput = $("input.js-date")
+if (dateInput.length) {
+	dateInput.datePicker();
+}
+/* 权限配置 */
+$(function () {
+    //动态选择框，上下级选中状态变化
+    $('input.checkbox-parent').on('change', function () {
+        var dataid = $(this).attr("dataid");
+        $('input[dataid^=' + dataid + '-]').prop('checked', $(this).is(':checked'));
+    });
+    $('input.checkbox-child').on('change', function () {
+        var dataid = $(this).attr("dataid");
+        dataid = dataid.substring(0, dataid.lastIndexOf("-"));
+        var parent = $('input[dataid=' + dataid + ']');
+        if ($(this).is(':checked')) {
+            parent.prop('checked', true);
+            //循环到顶级
+            while (dataid.lastIndexOf("-") != 2) {
+                dataid = dataid.substring(0, dataid.lastIndexOf("-"));
+                parent = $('input[dataid=' + dataid + ']');
+                parent.prop('checked', true);
+            }
+        } else {
+            //父级
+            if ($('input[dataid^=' + dataid + '-]:checked').length == 0) {
+                parent.prop('checked', false);
+                //循环到顶级
+                while (dataid.lastIndexOf("-") != 2) {
+                    dataid = dataid.substring(0, dataid.lastIndexOf("-"));
+                    parent = $('input[dataid=' + dataid + ']');
+                    if ($('input[dataid^=' + dataid + '-]:checked').length == 0) {
+                        parent.prop('checked', false);
+                    }
+                }
+            }
+        }
+    });
+});
+//模态框状态
+$(document).ready(function () {
+    $("#myModaledit").hide();
+    $("#gb").click(function () {
+        $("#myModaledit").hide(200);
+    });
+    $("#gbb").click(function () {
+        $("#myModaledit").hide(200);
+    });
+    $("#gbbb").click(function () {
+        $("#myModaledit").hide(200);
+    });
+});
+$(document).ready(function () {
+    $("#myModal").hide();
+    $("#gb").click(function () {
+        $("#myModal").hide(200);
+    });
+    $("#gb").click(function () {
+        $("#myModal1").hide(200);
+    });
+
+    $(".gb").click(function () {
+        $("#myModal").hide(200);
+    });
+    $(".gbb").click(function () {
+        $("#myModal1").hide(200);
+        window.location.reload();
+    });
+    $(".gbbb").click(function () {
+        $("#myModal2").hide(200);
+    });
+    $(".gbbbb").click(function () {
+        $("#myModal3").hide(200);
+    });
+
+    $("#gbb").click(function () {
+        $("#myModal").hide(200);
+    });
+    $("#gbb").click(function () {
+        $("#myModal1").hide(200);
+    });
+    $("#gbbb").click(function () {
+        $("#myModal").hide(200);
+    });
+    $("#gbbb").click(function () {
+        $("#myModal1").hide(200);
+    });
+});
+/*************************************************************************** 所有ajax获取编辑数据 ********************************************************/
+/* 会员组修改操作 */
+$(function () {
+	$('body').on('click','.memberedit-btn',function () {
+        var $url = this.href,
+            val = $(this).data('id');
+        $.post($url, {member_group_id: val}, function (data) {
+            if (data.code == 1) {
+                $("#myModaledit").show(300);
+                $("#editmember_group_id").val(data.member_group_id);
+                $("#editmember_group_name").val(data.member_group_name);
+                $("#editmember_group_open").val(data.member_group_open);
+                $("#editmember_group_toplimit").val(data.member_group_toplimit);
+                $("#editmember_group_bomlimit").val(data.member_group_bomlimit);
+            } else {
+                layer.alert(data.msg, {icon: 5});
+            }
+        }, "json");
+        return false;
+    });
+});
+/* 友链类型 */
+function openWindow(a, b, c) {
+    $("#myModal").show(300);
+    $("#plug_linktype_id").val(a);
+    $("#newplug_linktype_name").val(b);
+    $("#newplug_linktype_order").val(c);
+}
+/* 模型添加到menu */
+function addmenu(a) {
+    $("#myModal").show(300);
+    $("#model_id").val(a);
+}
+/* we菜单添加 */
+function add_we_menu(a) {
+    $('#myModal').modal('show');
+    $("#we_menu_leftid").val(a);
+}
+/* 路由规则编辑 */
+$(function () {
+    $('body').on('click','.routeedit-btn',function () {
+        var $url = this.href,
+            val = $(this).data('id');
+        $.post($url, {id: val}, function (data) {
+            if (data.code == 1) {
+                $("#myModaledit").show(300);
+                $("#editroute_id").val(data.id);
+                $("#editroute_full_url").val(data.full_url);
+                $("#editroute_url").val(data.url);
+                if (data.status == 1) {
+                    $("#editroute_status").prop("checked",true);
+                } else {
+                    $("#editroute_status").prop("checked", false);
+                }
+                $("#editroute_listorder").val(data.listorder);
+            } else {
+                layer.alert(data.msg, {icon: 5});
+            }
+        }, "json");
+        return false;
+    });
+});
+/* 友链编辑 */
+$(function () {
+	$('body').on('click','.linkedit-btn',function () {
+        var $url = this.href,
+            val = $(this).data('id');
+        $.post($url, {plug_link_id: val}, function (data) {
+            if (data.code == 1) {
+                $("#myModaledit").show(300);
+                $("#editplug_link_id").val(data.plug_link_id);
+				$("#editplug_link_l").val(data.plug_link_l);
+                $("#editplug_link_name").val(data.plug_link_name);
+                $("#editplug_link_url").val(data.plug_link_url);
+                $("#editplug_link_target").val(data.plug_link_target);
+                $("#editplug_link_qq").val(data.plug_link_qq);
+                $("#editplug_link_order").val(data.plug_link_order);
+                $("#editplug_link_typeid").val(data.plug_link_typeid);
+            } else {
+                layer.alert(data.msg, {icon: 5});
+            }
+        }, "json");
+        return false;
+    });
+});
+/* 广告位编辑 */
+$(function () {
+	$('body').on('click','.adtypeedit-btn',function () {
+        var $url = this.href,
+            val = $(this).data('id');
+        $.post($url, {plug_adtype_id: val}, function (data) {
+            if (data.code == 1) {
+                $("#myModaledit").show(300);
+                $("#adtype_id").val(data.plug_adtype_id);
+                $("#adtype_name").val(data.plug_adtype_name);
+                $("#adtype_order").val(data.plug_adtype_order);
+            } else {
+                layer.alert(data.msg, {icon: 5});
+            }
+        }, "json");
+        return false;
+    });
+});
+/* 回复留言 */
+$(function () {
+	$('body').on('click','.sugreply-btn1',function () {
+        var $url = this.href,
+            val = $(this).data('id');
+        $.post($url, {zirwid: val}, function (data) {
+            //console.log(data);
+            if (data.code == 1) {
+                $("#myModal").show(300);
+            } else {
+                layer.alert(data.msg, {icon: 5});
+            }
+        }, "json");
+        return false;
+    });
+});
+
+/* 添加周报的生成周报 此模块为我的周报管理*/
+$(function () {
+    $('body').on('click','.confirm-zb-btn',function () {
+        //添加周报
+        var v = $("#zb_time").val(); //获取选择的日期
+        if(v == ''){
+            alert('请选择日期再选择生成周报');
+            return false;
+        }
+        var $url = this.href;
+        var arr = []; //装子任务完成的数据
+        var arr1 = []; //装子任务未完成的数据
+        //console.log(v);
+        $.post($url, {zb_time: v}, function (data) {
+            //console.log(data);
+            $.each(data,function (k,v) {
+                if(v.biaoz == 19){  //为子任务完成
+                    arr.push(v);
+                }
+                if(v.biaoz == 21){  //为子任务未完成
+                    arr1.push(v);
+                }
+            });
+            var content = $("#zb_content").val(); //获取文本里面的文字
+            if(content != ''){
+                //拼接本周记录，本周未完成记录：1：xxxx2：xxxx 本周已完成记录：1：xxxx2：xxxx
+                var str = content + "\r\n" + "本周完成记录有" + arr.length + "条:" + "\r\n";  //已完成
+                for (var i=0;i<arr.length;i++){
+                    str += (i+1) + ':(任务名称)' + arr[i]['renwbt'] + '        ----已完成' + "\r\n";
+                }
+                str += "\r\n本周未完成记录有" + arr1.length + "条:" + "\r\n"; //未完成
+                for (var i=0;i<arr.length;i++){
+                    str += (i+1) + ':(任务名称)' + arr[i]['renwbt'] + '        ----未完成' + "\r\n";
+                }
+                $("#zb_content").val(str);
+                layer.alert("本周周报生成成功", {icon: 1});
+            }else{
+                //拼接本周记录，本周未完成记录：1：xxxx2：xxxx 本周已完成记录：1：xxxx2：xxxx
+                var str = "本周完成记录有" + arr.length + "条:" + "\r\n";  //已完成
+                for (var i=0;i<arr.length;i++){
+                    str += (i+1) + ':(任务名称)' + arr[i]['renwbt'] + '        ----已完成' + "\r\n";
+                }
+                str += "\r\n本周未完成记录有" + arr1.length + "条:" + "\r\n"; //未完成
+                for (var i=0;i<arr.length;i++){
+                    str += (i+1) + ':(任务名称)' + arr[i]['renwbt'] + '        ----未完成' + "\r\n";
+                }
+                $("#zb_content").val(str);
+                layer.alert("本周周报生成成功", {icon: 1});
+            }
+        }, "json");
+        return false;
+    });
+});
+
+/* 修改周报的生成周报 此模块为我的周报管理*/
+$(function () {
+    $('body').on('click','.confirm-zb-edit-btn',function () {
+        //修改周报
+        var v1 = $("#zb_edit_time").val(); //获取选择的日期
+        if(v1 == ''){
+            alert('请选择日期再选择生成周报');
+            return false;
+        }
+        var $url = this.href;
+        var arr = []; //装子任务完成的数据
+        var arr1 = []; //装子任务未完成的数据
+        $.post($url, {zb_time: v1}, function (data) {
+            //console.log(data);
+            $.each(data,function (k,v) {
+                if(v.biaoz == 19){  //为子任务完成
+                    arr.push(v);
+                }
+                if(v.biaoz == 21){  //为子任务未完成
+                    arr1.push(v);
+                }
+            });
+            var content = $("#zb_edit_content").val(); //获取文本里面的文字
+            if(content != ''){
+                //拼接本周记录，本周未完成记录：1：xxxx2：xxxx 本周已完成记录：1：xxxx2：xxxx
+                var str = content + "\r\n" + "本周完成记录有" + arr.length + "条:" + "\r\n";  //已完成
+                for (var i=0;i<arr.length;i++){
+                    str += (i+1) + ':(任务名称)' + arr[i]['renwbt'] + '        ----已完成' + "\r\n";
+                }
+                str += "\r\n本周未完成记录有" + arr1.length + "条:" + "\r\n"; //未完成
+                for (var i=0;i<arr.length;i++){
+                    str += (i+1) + ':(任务名称)' + arr[i]['renwbt'] + '        ----未完成' + "\r\n";
+                }
+                $("#zb_edit_content").val(str);
+                layer.alert("本周周报生成成功", {icon: 1});
+            }else{
+                //拼接本周记录，本周未完成记录：1：xxxx2：xxxx 本周已完成记录：1：xxxx2：xxxx
+                var str = "本周完成记录有" + arr.length + "条:" + "\r\n";  //已完成
+                for (var i=0;i<arr.length;i++){
+                    str += (i+1) + ':(任务名称)' + arr[i]['renwbt'] + '        ----已完成' + "\r\n";
+                }
+                str += "\r\n本周未完成记录有" + arr1.length + "条:" + "\r\n"; //未完成
+                for (var i=0;i<arr.length;i++){
+                    str += (i+1) + ':(任务名称)' + arr[i]['renwbt'] + '        ----未完成' + "\n";
+                }
+                $("#zb_edit_content").val(str);
+                layer.alert("本周周报生成成功", {icon: 1});
+            }
+        }, "json");
+        return false;
+    });
+});
+/*把<br />转换成\n，因为在td中\n无法换行，<br />才能换行*/
+function return2Br(str) {
+    return str.replace(/\<br \/\>/g,"\r\n");
+}
+/* 上级评论周报显示动态框 此模块为查看下属周报模块 */
+$(function () {
+    $('body').on('click','.runcomment-btn',function () {
+        var $url = this.href,
+            val = $(this).data('id');
+        $.post($url, {id: val}, function (data) {
+            $("#myModal2").show(300);
+            $("#weeklog_id2").val(data.id);
+            $("#sj_comment").val(data.sj_comment);
+        }, "json");
+        return false;
+    });
+});
+
+/* 查看周报 ，此模块为查看下属周报模块*/
+$(function () {
+    $('body').on('click','.runchakan-btn',function () {
+        var $url = this.href,
+            val = $(this).data('id'),val1 = '#F9F9F9',val2 = '#858585',dc_href = $(this).data('href'); //修改字体颜色和表格tr查看颜色
+        $.post($url, {id: val,color:val1,zt_color:val2}, function (data) {
+            $(".dc_word").attr('href',dc_href); //把导出word的链接赋值上去
+            if (data.code == 1) {
+                $("#myModal1").show(300);
+                $("#weeklog_id1").val(data.id); //周报id
+                //把查看周报的数据赋值到table上
+                $("#chakan-table tbody tr:eq(0) td:eq(1)").html(data.sjld_name);//显示的是上级领导的真名
+                $("#chakan-table tbody tr:eq(1) td:eq(1)").html(data.zb_time);
+                $("#chakan-table tbody tr:eq(2) td:eq(1)").html(data.week);
+                $("#chakan-table tbody tr:eq(3) td:eq(1)").html(data.zb_content);
+                $("#chakan-table tbody tr:eq(4) td:eq(1)").html(data.zb_next_content);
+                $("#chakan-table tbody tr:eq(5) td:eq(1)").html(data.zb_issue);
+                $("#chakan-table tbody tr:eq(6) td:eq(1)").html(data.sj_comment);
+                //重新生成第几周
+                if(v1 != ''){
+                    var date = v1.split("-");
+                    var a = date[0]; //年
+                    var b = date[1]; //月
+                    var c = date[2]; //日
+                    //调用生成本月第几周函数
+                    var w = getMonthWeek(a,b,c); //返回第几周
+                    $("#zb_edit_weeks").attr('value',(parseInt(b) - 0)+'月第'+w+'周');
+                }
+            } else {
+                layer.alert(data.msg, {icon: 5});
+            }
+        }, "json");
+        return false;
+    });
+});
+
+/* 修改周报 此模块为我的周报管理*/
+$(function () {
+    $('body').on('click','.runedit-btn',function () {
+        var $url = this.href,
+            val = $(this).data('id'),val1 = $(this).data('data'),dc_href = $(this).data('href');
+        $.post($url, {id: val}, function (data) {
+            if (data.code == 1) {
+                $(".dc_word").attr('href',dc_href); //把导出word的链接赋值上去
+                if(val1 == 'chakan'){ //如果是已经提交的，即为查看
+                    $("#myModal2").show(300);
+                    $("#weeklog_id2").val(data.id); //周报id
+                    //把查看周报的数据赋值到table上
+                    $("#chakan-table tbody tr:eq(0) td:eq(1)").html(data.sjld_name);
+                    $("#chakan-table tbody tr:eq(1) td:eq(1)").html(data.zb_time);
+                    $("#chakan-table tbody tr:eq(2) td:eq(1)").html(data.week);
+                    $("#chakan-table tbody tr:eq(3) td:eq(1)").html(data.zb_content);
+                    $("#chakan-table tbody tr:eq(4) td:eq(1)").html(data.zb_next_content);
+                    $("#chakan-table tbody tr:eq(5) td:eq(1)").html(data.zb_issue);
+                    $("#chakan-table tbody tr:eq(6) td:eq(1)").html(data.sj_comment);
+                }else{
+                    $("#myModal1").show(300);
+                    //默认选中上级领导
+                    $("#select-5").val(data.sjld).trigger("change");
+                    $("#zb_edit_time").val(data.zb_time);
+                    var v1 = $("#zb_edit_time").val();
+                    //$("#edit_weeks").val(data.week);
+                    $("#weeklog_id").val(data.id); //周报id
+                    $("#zb_edit_content").val(return2Br(data.zb_content)); //本周记录
+                    $("#zb_edit_issue").val(return2Br(data.zb_issue));
+                    $("#zb_next_edit_content").val(return2Br(data.zb_next_content));
+                    //重新生成第几周
+                    if(v1 != ''){
+                        var date = v1.split("-");
+                        var a = date[0]; //年
+                        var b = date[1]; //月
+                        var c = date[2]; //日
+                        //调用生成本月第几周函数
+                        var w = getMonthWeek(a,b,c); //返回第几周
+                        $("#zb_edit_weeks").attr('value',b+'月第'+w+'周');
+                    }
+                }
+            } else {
+                layer.alert(data.msg, {icon: 5});
+            }
+        }, "json");
+        return false;
+    });
+});
+//获取当月第几周
+//a --年，b--月，c--日
+var getMonthWeek = function (a, b, c) {
+    /*
+     a = d = 当前日期
+     b = 6 - w = 当前周的还有几天过完(不算今天)
+     a + b 的和在除以7 就是当天是当前月份的第几周
+     */
+    var date = new Date(a, parseInt(b)-1, c), w = date.getDay(), d = date.getDate();
+    return Math.ceil(
+        (d + 6 - w) / 7
+    );
+};
+
+var getYearWeek = function (a, b, c) {
+    /*
+     date1是当前日期
+     date2是当年第一天
+     d是当前日期是今年第多少天
+     用d + 当前年的第一天的周差距的和在除以7就是本年第几周
+     */
+    var date1 = new Date(a, parseInt(b) - 1, c), date2 = new Date(a, 0, 1),
+        d = Math.round((date1.valueOf() - date2.valueOf()) / 86400000);
+    return Math.ceil(
+        (d + ((date2.getDay() + 1) - 1)) / 7
+    );
+};
+
+/* 修改工时 */
+$(function () {
+    $('body').on('click','.sugreply-btn',function () {
+        var $url = this.href,
+            val = $(this).data('id');
+        $.post($url, {plug_sug_id: val}, function (data) {
+            if (data.code == 1) {
+                $("#myModal").show(300);
+                $("#plug_sug_toemail").val(data.plug_sug_email);
+                $("#plug_sug_toname").val(data.plug_sug_name);
+                $("#plug_sug_id").val(data.plug_sug_id);
+            } else {
+                layer.alert(data.msg, {icon: 5});
+            }
+        }, "json");
+        return false;
+    });
+});
+/* 来源编辑 */
+$(function () {
+	$('body').on('click','.sourceedit-btn',function () {
+        var $url = this.href,
+            val = $(this).data('id');
+        $.post($url, {source_id: val}, function (data) {
+            if (data.code == 1) {
+                $("#myModaledit").show(300);
+                $("#editsource_id").val(data.source_id);
+                $("#editsource_name").val(data.source_name);
+                $("#editsource_order").val(data.source_order);
+            } else {
+                layer.alert(data.msg, {icon: 5});
+            }
+        }, "json");
+        return false;
+    });
+});
+//来源
+function souadd(val) {
+    $('#news_source').val(val);
+}
+/* 微信菜单编辑 */
+$(function () {
+	$('body').on('click','.menuedit-btn',function () {
+        var $url = this.href,
+            val = $(this).data('id');
+        $.post($url, {we_menu_id: val}, function (data) {
+            if (data.code == 1) {
+                $("#myModaledit").show(300);
+                $("#editwe_menu_id").val(data.we_menu_id);
+                $("#editwe_menu_name").val(data.we_menu_name);
+                $("#editwe_menu_leftid").val(data.we_menu_leftid);
+                $("#editwe_menu_type").val(data.we_menu_type);
+                $("#editwe_menu_typeval").val(data.we_menu_typeval);
+                $("#editwe_menu_order").val(data.we_menu_order);
+                if(data.we_menu_open){
+                    $("#editwe_menu_open").prop("checked",true);
+                }else{
+                    $("#editwe_menu_open").prop("checked",false);
+                }
+            } else {
+                layer.alert(data.msg, {icon: 5});
+            }
+        }, "json");
+        return false;
+    });
+});
+/* 微信关键词回复编辑 */
+$(function () {
+	$('body').on('click','.replyedit-btn',function () {
+        var $url = this.href,
+            val = $(this).data('id');
+        $.post($url, {we_reply_id: val}, function (data) {
+            if (data.code == 1) {
+                $("#myModaledit").show(300);
+                $("#editwe_reply_id").val(data.we_reply_id);
+                $("#editwe_reply_key").val(data.we_reply_key);
+                $("#editwe_reply_type").val(data.we_reply_type);
+				var Modal=$("#editwe_reply_type").parents('.modal');
+				if(data.we_reply_type=='news'){
+					Modal.find("#input-text").hide();
+					Modal.find("#input-news").show();
+					$("#editnews_title").val(data.we_reply_content.title);
+					$("#editnews_description").val(data.we_reply_content.description);
+					$("#editnews_url").val(data.we_reply_content.url);
+					$("#editnews_image").val(data.we_reply_content.image);
+				}else{
+					Modal.find("#input-news").hide();
+					Modal.find("#input-text").show();
+					$("#editwe_reply_content").val(data.we_reply_content);
+				}
+                if(data.we_reply_open){
+                    $("#editwe_reply_open").prop("checked",true);
+                }else{
+                    $("#editwe_reply_open").prop("checked",false);
+                }
+            } else {
+                layer.alert(data.msg, {icon: 5});
+            }
+        }, "json");
+        return false;
+    });
+});
+
+/*周报上传*/
+//周报添加模块
+$("#file1").change(function () {
+    $(".up_zb").html(this.files[0]['name']);  //添加周报的文本上传id
+    //console.log(this.files[0]['name']);
+});
+//周报修改模块
+$("#file2").change(function () {
+    $(".up_zb").html(this.files[0]['name']);  //修改周报的文本上传id
+    //console.log(this.files[0]['name']);
+});
+
+/*************************************************************************** 单图/多图操作********************************************************/
+/* 单图上传 */
+$("#file0").change(function () {
+    var objUrl = getObjectURL(this.files[0]);
+    console.log("objUrl = " + objUrl);
+    if (objUrl) {
+        $("#img0").attr("src", objUrl);
+    }
+});
+//
+$("input[id^=file_]").change(function () {
+    var field=$(this).data('field'),objUrl = getObjectURL2(this.files[0],field);
+    console.log("objUrl = " + objUrl);
+    if (objUrl) {
+        $("#img_"+field).attr("src", objUrl);
+    }
+});
+function getObjectURL(file) {
+    var url = null;
+    if (window.createObjectURL != undefined) { // basic
+        $("#oldcheckpic").val("nopic");
+        url = window.createObjectURL(file);
+    } else if (window.URL != undefined) { // mozilla(firefox)
+        $("#oldcheckpic").val("nopic");
+        url = window.URL.createObjectURL(file);
+    } else if (window.webkitURL != undefined) { // webkit or chrome
+        $("#oldcheckpic").val("nopic");
+        url = window.webkitURL.createObjectURL(file);
+    }
+    return url;
+}
+function getObjectURL2(file,field) {
+    var url = null;
+    if (window.createObjectURL != undefined) { // basic
+        $("#oldcheckpic_"+field).val("nopic");
+        url = window.createObjectURL(file);
+    } else if (window.URL != undefined) { // mozilla(firefox)
+        $("#oldcheckpic_"+field).val("nopic");
+        url = window.URL.createObjectURL(file);
+    } else if (window.webkitURL != undefined) { // webkit or chrome
+        $("#oldcheckpic_"+field).val("nopic");
+        url = window.webkitURL.createObjectURL(file);
+    }
+    return url;
+}
+function backpic2(picurl,field) {
+    $("#img_"+field).attr("src", picurl);//还原修改前的图片
+    $("#file_"+field).val("");//清空文本框的值
+    $("#oldcheckpic_"+field).val(picurl);//清空文本框的值
+}
+function backpic(picurl) {
+    $("#img0").attr("src", picurl);//还原修改前的图片
+    $("input[name='file0']").val("");//清空文本框的值
+    $("input[name='oldcheckpic']").val(picurl);//清空文本框的值
+}
+/* 新闻多图删除 */
+function delall(id, url) {
+    $('#id' + id).hide();
+    var str = $('#pic_oldlist').val();//最原始的完整路径
+    var surl = url + ',';
+    var pic_newold = str.replace(surl, "");
+    $('#pic_oldlist').val(pic_newold);
+}
+/*************************************************************************** 数据备份还原********************************************************/
+/* 数据库备份、优化、修复 */
+(function ($) {
+    $("a[id^=optimize_]").click(function () {
+        $.get(this.href, function (data) {
+            if (data.code==1) {
+                layer.alert(data.msg, {icon: 6});
+            } else {
+                layer.alert(data.msg, {icon: 5});
+            }
+        });
+        return false;
+    });
+    $("a[id^=repair_]").click(function () {
+        $.get(this.href, function (data) {
+            if (data.code==1) {
+                layer.alert(data.msg, {icon: 6});
+            } else {
+                layer.alert(data.msg, {icon: 5});
+            }
+        });
+        return false;
+    });
+
+    var $form = $("#export-form"), $export = $("#export"), tables
+    $optimize = $("#optimize"), $repair = $("#repair");
+
+    $optimize.add($repair).click(function () {
+		var that=this;
+        $.post(this.href, $form.serialize(), function (data) {
+            if (data.code==1) {
+                layer.alert(data.msg, {icon: 6}, function (index) {
+                    layer.close(index);
+                });
+            } else {
+                layer.alert(data.msg, {icon: 5}, function (index) {
+                    layer.close(index);
+                });
+            }
+            setTimeout(function () {
+                $('#top-alert').find('button').click();
+                $(that).removeClass('disabled').prop('disabled', false);
+            }, 1500);
+        }, "json");
+        return false;
+    });
+
+    $export.click(function () {
+        $export.children().addClass("disabled");
+        $export.children().text("正在发送备份请求...");
+		var that=this;
+        $.post(
+            $form.attr("action"),
+            $form.serialize(),
+            function (data) {
+                if (data.code==1) {
+                    tables = data.tables;
+                    $export.children().text(data.msg + "开始备份，请不要关闭本页面！");
+                    backup(data.tab);
+                    window.onbeforeunload = function () {
+                        return "正在备份数据库，请不要关闭！"
+                    }
+                } else {
+                    layer.alert(data.msg, {icon: 5});
+                    $export.children().removeClass("disabled");
+                    $export.children().text("立即备份");
+                    setTimeout(function () {
+                        $('#top-alert').find('button').click();
+                        $(that).removeClass('disabled').prop('disabled', false);
+                    }, 1500);
+                }
+            },
+            "json"
+        );
+        return false;
+    });
+
+    function backup(tab, status) {
+        status && showmsg(tab.id, "开始备份...(0%)");
+		var that=this;
+        $.get($form.attr("action"), tab, function (data) {
+            if (data.code==1) {
+                showmsg(tab.id, data.msg);
+                if (!$.isPlainObject(data.tab)) {
+                    $export.children().removeClass("disabled");
+                    $export.children().text("备份完成，点击重新备份");
+                    window.onbeforeunload = null;
+                }
+				if(data.tab !=undefined){
+					backup(data.tab, tab.id != data.tab.id);
+				}
+            } else {
+                updateAlert(data.msg, 'alert-error');
+                $export.children().removeClass("disabled");
+                $export.children().text("立即备份");
+                setTimeout(function () {
+                    $('#top-alert').find('button').click();
+                    $(that).removeClass('disabled').prop('disabled', false);
+                }, 1500);
+            }
+        }, "json");
+    }
+
+    function showmsg(id, msg) {
+        $tr=$form.find("input[value=" + tables[id] + "]").closest("tr");
+        $tr.find(".green").html("");
+        $tr.find(".info").html("");
+        $tr.find(".backup").html(msg);
+    }
+})(jQuery);
+/*************************************************************************** 其它********************************************************/
+/* textarea字数提示 */
+$(function () {
+    $('textarea.limited').maxlength({
+        'feedback': '.charsLeft',
+    });
+    $('textarea.limited1').maxlength({
+        'feedback': '.charsLeft1',
+    });
+    $('textarea.limited2').maxlength({
+        'feedback': '.charsLeft2',
+    });
+    $('textarea.limited3').maxlength({
+        'feedback': '.charsLeft3',
+    });
+    $('textarea.limited4').maxlength({
+        'feedback': '.charsLeft4',
+    });
+    $('textarea.limited5').maxlength({
+        'feedback': '.charsLeft5',
+    });
+});
+$(function () {
+    $("[data-toggle='tooltip']").tooltip();
+});
+/*************************************************************************** 生成安全文件********************************************************/
+(function ($) {
+	$('body').on('click','#security_generate',function () {
+        $(this).children().addClass("disabled");
+        $(this).find("span").text("正在生成安全文件...");
+        $.get(this.href, function (data) {
+            if (data.code==1) {
+                layer.alert(data.msg, {icon: 6}, function (index) {
+                    layer.close(index);
+                    window.location.href = data.url;
+                });
+            } else {
+                layer.alert(data.msg, {icon: 5}, function (index) {
+                    layer.close(index);
+                });
+            }
+            $(this).children().removeClass("disabled");
+            $(this).find("span").text("重新生成安全文件");
+        });
+        return false;
+});
+})(jQuery);
+/*************************************************************************** 选择列表框change事件********************************************************/
+//  判断substr字符串在str中出现的次数  isIgnore是否忽略大小写!
+function countSubstr(str,substr,isIgnore){
+    var count;
+    var reg="";
+    if(isIgnore==true){
+        reg="/"+substr+"/gi";
+    }else{
+        reg="/"+substr+"/g";
+    }
+    reg=eval(reg);
+    if(str.match(reg)==null){
+        count=0;
+    }else{
+        count=str.match(reg).length;
+    }
+    return count;
+}
+
+(function ($) {
+	$('body').on('change','.ajax_change',function () {
+        var $form = $(this).parents("form");
+		$.ajax({
+		    url:$form.attr('action'),
+			type:"POST",
+			data:$form.serialize(),
+			success: function(data,status){
+				$("#ajax-data").html(data);
+			}
+		});
+    });
+    //任务列表
+    $('body').on('change','.ajax_change2',function () {
+        var $form = $(this).parents("form");
+        //console.log($form.serialize());
+        $.ajax({
+            url:$form.attr('action'),
+            type:"POST",
+            data:$form.serialize(),
+            success: function(data,status){
+                $("#ajax-data").html(data);
+                //<input type="hidden" class="issue_sum" value="{$sum}">
+                var n=data.match(/xx=\"+\d+\"/g);
+                //console.log(n[0]); //xx="12"
+                var n1 = n[0].match(/\d+/); //12 ,优先级为高时候的数值
+                var n2 = n[1].match(/\d+/); //8
+                var n3 = n[2].match(/\d+/); //12
+                //自动更新总任务数目等
+                //var b = countSubstr(data,'<tr id="ab">',true);
+                $("#sum").html(n1+'个');
+                //console.log(data);
+                //var a = countSubstr(data,'<span style="color:red;">',true);//已解决
+                $("#jj").html((n1-n3)+'个');
+                $("#wjj").html((n3)+'个');
+                //$("#sum").html()
+            }
+        });
+    });
+    //个人发布任务记录
+    //任务列表
+    $('body').on('change','.ajax_change3',function () {
+        var $form = $(this).parents("form");
+        $.ajax({
+            url:$form.attr('action'),
+            type:"POST",
+            data:$form.serialize(),
+            success: function(data,status){
+                //console.log(data);
+                $("#ajax-data").html(data);
+            }
+        });
+    });
+
+    /*如果接收成功就接收未完成数目*/
+    $('body').on('change','.ajax_change1',function () {
+        $("#container").css('display','none'); //隐藏原来的统计表
+        var $form = $(this).parents("form");
+        $.ajax({
+            url:$form.attr('action'),
+            type:"POST",
+            data:$form.serialize(),
+            success: function(data,status){
+                //console.log(data);
+                var a = $.parseJSON(data);
+                $("#count").html(a.count);
+                $("#count1").html("百分比:100%");
+                $("#rw_count").html(a.sum);
+                //计算百分比
+                var b = '百分比:'+(a.sum/a.count*100).toFixed(2)+'%';
+                $("#rw_count1").html(b);
+                var c = '百分比:'+(a.a/a.count*100).toFixed(2)+'%';
+                $("#aa").html(a.a);
+                $("#aa1").html(c);
+                var one_count = a.one_count.split(",");
+                var all_count = a.all_count.split(",");
+                var sum_count = a.sum_count.split(",");
+                var dataIntArr1=[];//保存转换后的整型字符串
+                var dataIntArr2=[];//保存转换后的整型字符串
+                var dataIntArr3=[];//保存转换后的整型字符串
+                //console.log(sum_count);
+                one_count.forEach(function(data,index,arr){
+                    dataIntArr1.push(+data);
+                });
+                all_count.forEach(function(data,index,arr){
+                    dataIntArr2.push(+data);
+                });
+                sum_count.forEach(function(data,index,arr){
+                    dataIntArr3.push(+data);
+                });
+                //console.log(dataIntArr1);
+                //console.log(dataIntArr2);
+                //console.log(dataIntArr3);
+                //生成新的统计
+                $("#container1").css('display','');
+                Highcharts.chart('container1', {
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: '任务数据统计'
+                    },
+                    /*subtitle: {
+                     text: 'Source: WorldClimate.com'
+                     },*/
+                    xAxis: {
+                        categories: [
+                            '一月',
+                            '二月',
+                            '三月',
+                            '四月',
+                            '五月',
+                            '六月',
+                            '七月',
+                            '八月',
+                            '九月',
+                            '十月',
+                            '十一月',
+                            '十二月'
+                        ],
+                        crosshair: true
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: '任务个数 (个)'
+                        }
+                    },
+                    tooltip: {
+                        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                        '<td style="padding:0"><b>{point.y:.1f} 个</b></td></tr>',
+                        footerFormat: '</table>',
+                        shared: true,
+                        useHTML: true
+                    },
+                    plotOptions: {
+                        column: {
+                            pointPadding: 0.2,
+                            borderWidth: 0
+                        }
+                    },
+                    series: [{
+                        name: '总发布任务',
+                        data: dataIntArr2
+
+                    }, {
+                        name: '已解决任务',
+                        data: dataIntArr1,
+                        color: '#A9FF96'
+                    }, {
+                        name: '未解决任务',
+                        data: dataIntArr3,
+                        color: 'red'
+                    }]
+                });
+
+                //alert(a.count);
+            }
+        });
+    });
+
+    $('body').on('click','.range_inputs .applyBtn',function () {
+        var reservation=$('#reservation');
+        var $form = reservation.parents("form");
+        reservation.val($('input[name="daterangepicker_start"]').val()+' - '+$('input[name="daterangepicker_end"]').val());
+        $.ajax({
+            url:$form.attr('action'),
+            type:"POST",
+            data:$form.serialize(),
+            success: function(data,status){
+                $("#ajax-data").html(data);
+            }
+        });
+    });
+    })(jQuery);
+(function ($) {
+	$('body').on('change','.submit_change',function () {
+        var $form = $(this).parents("form");
+        $form.submit();
+    });
+    })(jQuery);
+function ajax_page(page) {
+	$.ajax({
+		type:"POST",
+		data:$('#list-filter').serialize()+'&page='+page, //修改增加一个yxjb
+		success: function(data,status){
+			$("#ajax-data").html(data);
+		}
+	});
+}
+
+/*搜索form*/
+$(function () {
+	$('body').on('click','.ajax-search-form',function () {
+		$.ajax({
+			type:"POST",
+			data:$(this).parents("form").serialize(),
+			success: function(data,status){
+				$("#ajax-data").html(data);
+			}
+		});
+        return false;
+    });
+});
+/*搜索type*/
+$(function () {
+	$('body').on('click','.ajax-search-type',function () {
+		$(this).parents("form")[0].reset();
+		alert($(this).data('type'));
+		$.ajax({
+			type:"POST",
+			data:{type:$(this).data('type')},
+			success: function(data,status){
+				$("#ajax-data").html(data);
+			}
+		});
+        return false;
+    });
+});
+/*搜索form显示全部*/
+$(function () {
+	$('body').on('click','.ajax-display-all',function () {
+		$(this).parents("form")[0].reset();
+		$.ajax({
+			type:"POST",
+			data:{},
+			success: function(data,status){
+				$("#ajax-data").html(data);
+			}
+		});
+        return false;
+    });
+});
+/*清空*/
+$(function () {
+	$('body').on('click','.ajax-drop',function () {
+		$(this).parents("form")[0].reset();
+		var url=$(this).parent('a').attr('href');
+		$.ajax({
+			type:"POST",
+			url:url,
+			data:{},
+			success: function(data,status){
+				layer.alert(data.msg, {icon: 6}, function (index) {
+                    layer.close(index);
+                    window.location.href = data.url;
+                });
+			}
+		});
+        return false;
+    });
+});
+/*详情*/
+$(function () {
+	$('body').on('click','.show-details-btn',function (e) {
+		e.preventDefault();
+		$(this).closest('tr').next().toggleClass('open');
+		$(this).find(ace.vars['.icon']).toggleClass('fa-angle-double-down').toggleClass('fa-angle-double-up');
+    });
+});
+$(function () {
+    /*权限管理*/
+	$('body').on('click','.rule-list',function () {
+		var $a=$(this),$tr=$a.parents('tr');
+		var $pid=$tr.attr('id');
+		if($a.find('span').hasClass('fa-minus')){
+			$("tr[id^='"+$pid+"-']").attr('style','display:none');
+			$a.find('span').removeClass('fa-minus').addClass('fa-plus');
+		}else{
+			if($("tr[id^='"+$pid+"-']").length>0){
+				$("tr[id^='"+$pid+"-']").attr('style','');
+				$a.find('span').removeClass('fa-plus').addClass('fa-minus');
+			}else{
+				var $url = this.href,$id=$a.data('id'),$level=$a.data('level');
+				$.post($url,{pid:$id,level:$level,id:$pid}, function (data) {
+					if (data) {
+						$a.find('span').removeClass('fa-plus').addClass('fa-minus');
+						$tr.after(data);
+					}else{
+						$a.find('span').removeClass('fa-plus').addClass('fa-minus');
+					}
+				}, "json");
+			}
+		}
+        return false;
+    });
+	//极验验证
+    $('#geetest_on').click(function(){
+        $("#geetest").toggle(200);
+    });
+});
+
+
+/*周报设置管理*/
+$(function () {
+    $('body').on('click','.weeklog-sys-list',function () {
+        var $a=$(this),$tr=$a.parents('tr');
+        var $pid=$tr.attr('id');
+        if($a.find('span').hasClass('fa-minus')){
+            $("tr[id^='"+$pid+"-']").attr('style','display:none');
+            $a.find('span').removeClass('fa-minus').addClass('fa-plus');
+        }else{
+            if($("tr[id^='"+$pid+"-']").length>0){
+                $("tr[id^='"+$pid+"-']").attr('style','');
+                $a.find('span').removeClass('fa-plus').addClass('fa-minus');
+            }else{
+                var $url = this.href,$id=$a.data('id'),$level=$a.data('level');
+                $.post($url,{pid:$id,level:$level,id:$pid}, function (data) {
+                    if (data) {
+                        $a.find('span').removeClass('fa-plus').addClass('fa-minus');
+                        $tr.after(data);
+                    }else{
+                        $a.find('span').removeClass('fa-plus').addClass('fa-minus');
+                    }
+                }, "json");
+            }
+        }
+        return false;
+    });
+});

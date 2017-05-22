@@ -1,0 +1,11 @@
+{foreach bug as $k=>$v}
+<tr>
+	<td style=" vertical-align: middle !important;">{$v.id}</td>
+	<td class="" style=" vertical-align: middle !important;">{$v.content}</td>
+	<td style=" vertical-align: middle !important;">{foreach admin_list as $k1=>$v1}{if $v1.admin_id==$v.admin_id}{$v1.admin_username}/{$v1.admin_realname}{/if}{/foreach}</td>
+	<td style=" vertical-align: middle !important;">{:date('Y-m-d H:i:s',$v.subtime)}</td>
+</tr>
+{/foreach}
+<tr id="page">
+	<td colspan="4" align="right">{$page}</td>
+</tr>

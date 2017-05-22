@@ -1,0 +1,64 @@
+<div class="widget-box sl-indextop10 text-left">
+    <div class="widget-header">
+        <h5 class="widget-title"><span style="font-size:14px; font-family:Microsoft YaHei">靠近完成日期任务</span></h5>
+    </div>
+    <div class="widget-body">
+        <div class="widget-main no-padding">
+            <table class="table table-striped table-bordered table-hover">
+                <thead class="thin-border-bottom">
+                <tr>
+                    <th width="8%">序号</th>
+                    <th width="20%">任务标题</th>
+                    <th width="12%">优先级别</th>
+                    <th width="20%">要求完成时间</th>
+                </tr>
+                </thead>
+                <tbody id="tishi">
+                    {foreach bug_list as $k=>$v}
+                    <tr>
+                        <td>{$k+1}</td>
+                        <td style=" vertical-align: middle !important;"><a href="{:url('admin/Task/issue_one',array('renwid'=>$v.renwid))}" title="{$v.renwbt}">{$v.renwbt|subtext=20}</a>
+                        </td>
+                        <td class="col-md-1" style=" vertical-align: middle !important;">{foreach name="rwlx_list" item="v1"}{if $v1['daimid']==$v.youxjb}{$v1['daimmc']}{/if}{/foreach}</td>
+                        <td style=" vertical-align: middle !important;" class="">{$v.yaoqwcsj}</td>
+                    </tr>
+                    {/foreach}
+                    <tr id="page">
+                        <td colspan="4" align="right">{$page}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<!--按照合适的值，自动改变颜色-->
+<script>
+    //获取当前日期格式：xxxx-xx-xx
+    function show(){
+        var mydate = new Date();
+        var str = mydate.getTime();
+        return str;
+    }
+    var trList = $("#tishi").children("tr");
+    for (var i=0;i<trList.length;i++) {
+        var tdArr = trList.eq(i).find("td");
+        var jb = tdArr.eq(2).text();//为级别
+        var gdsj = tdArr.eq(3).text();//为要求完成时间
+        var time_end = new Date(gdsj).getTime();//为要求完成时间戳
+
+        var a = '最高';
+        var c = '很高';
+        var d = '高';
+        jb = $.trim(jb);  //过滤掉空格
+
+        if(a == jb || c == jb || d == jb){  //高、很高、最高显示为红色
+            tdArr.eq(2).css('color','red');
+        }
+        //如果当前日期大于完成日期显示红色
+        var new_time = show();
+        //console.log(gdsj);
+        if(new_time>time_end){
+            tdArr.eq(3).css('color','red');
+        }
+    }
+    </script>

@@ -1,0 +1,118 @@
+{extend name="admin@public/base" /}
+{block name="main-content"}
+<div class="page-content">
+    <form name="" class="" id="list-filter" method="post" action="{:url('admin/Issuetj/issue_runlist')}">
+        <div class="row maintop">
+            <div class="col-xs-12 col-sm-12 maintop">
+                <select name="cp" class="ajax_change1">
+                    <option value="">选择人员</option>
+                    {foreach admin_list as $k=>$v}
+                    <option value="{$v.admin_id}">{$v.admin_realname}</option>
+                    {/foreach}
+                </select>
+                <select name="cp" class="ajax_change1">
+                    <option value="">选择产品</option>
+                    {foreach cp_list as $k=>$v}
+                    <option value="{$v.chanpid}">{$v.chanpmc}</option>
+                    {/foreach}
+                </select>
+                <select name="xm" class="ajax_change1">
+                    <option value="">选择项目</option>
+                    {foreach xm_list as $k=>$v}
+                    <option value="{$v.xiangmid}">{$v.xiangmmc}</option>
+                    {/foreach}
+                </select>
+            </div>
+        </div>
+    </form>
+</div>
+<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto;"></div>
+<div id="container1" style="min-width: 310px; height: 400px; margin: 0 auto;display: none;"></div>
+
+<script type="text/javascript">
+    Highcharts.chart('container', {
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: '任务数据统计'
+        },
+        /*subtitle: {
+         text: 'Source: WorldClimate.com'
+         },*/
+        xAxis: {
+            categories: [
+                '一月',
+                '二月',
+                '三月',
+                '四月',
+                '五月',
+                '六月',
+                '七月',
+                '八月',
+                '九月',
+                '十月',
+                '十一月',
+                '十二月'
+            ],
+            crosshair: true
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: '任务个数 (个)'
+            }
+        },
+        tooltip: {
+            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+            '<td style="padding:0"><b>{point.y:.1f} 个</b></td></tr>',
+            footerFormat: '</table>',
+            shared: true,
+            useHTML: true
+        },
+        plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0
+            }
+        },
+        series: [{
+            name: '总发布任务',
+            data: [{$all_count}],
+
+        }, {
+            name: '已解决任务',
+            data: [{$one_count}],
+            color: '#A9FF96'
+
+        }, {
+            name: '未解决任务',
+            data: [{$sum_count}],
+            color: 'red'
+        }]
+    });
+</script>
+<div class="tjbg" style="font-size:15px">
+    <table class="table table-bordered">
+        <tbody>
+        <tr class="active">
+            <th>总发布任务</th>
+            <th id="count">{$count}</th>
+            <th id="count1">百分比:{if $count!=0}100{/if}%</th>
+        </tr>
+        <tr class="active">
+            <th>未解决任务</th>
+            <th id="rw_count">{$sum}</th>
+            <th id="rw_count1">百分比:{if $count!=0}{$sum/$count*100|msubstr=0,4,'utf-8',false}{/if}%</th>
+        </tr>
+        <tr class="active">
+            <th>已解决任务</th>
+            <th id="aa">{$a}</th>
+            <th id="aa1">百分比:{if $count!=0}{$a/$count*100|msubstr=0,4,'utf-8',false}{/if}%</th>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+{/block}

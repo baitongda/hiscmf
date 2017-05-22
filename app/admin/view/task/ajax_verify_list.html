@@ -1,0 +1,89 @@
+{foreach buglist as $k=>$v}
+<tr>
+	<td class="" style=" vertical-align: middle !important;">{$k+1}</td>
+	<td style=" vertical-align: middle !important;"><a href="{:url('admin/Task/verify_one',array('renwid'=>$v.renwid))}" title="{$v.renwbt}">{$v.renwbt|subtext=9}</a>
+	</td>
+	<!--<td class="hidden-sm hidden-xs col-sm-4">{$v.renwnr}</td>-->
+	<td class="" style=" vertical-align: middle !important;">{foreach ztlist as
+		$k1=>$v1}{if
+		$v1.daimid==$v.youxjb}{$v1.daimmc}{/if}{/foreach}
+	</td>
+	<td class="" style=" vertical-align: middle !important;">{foreach ztlist as
+		$k1=>$v1}{if
+		$v1.daimid==$v.renwlx}{$v1.daimmc}{/if}{/foreach}
+	</td>
+	<td class="" style=" vertical-align: middle !important;">{foreach ztlist as
+		$k1=>$v1}{if
+		$v1.daimid==$v.jied}{$v1.daimmc}{/if}{/foreach}
+	</td>
+	<td class="" style=" vertical-align: middle !important;">{foreach admin_list as
+		$k1=>$v1}{if
+		$v1.admin_id==$v.fabry}{$v1.admin_realname}{/if}{/foreach}
+	</td>
+	<td class="" style=" vertical-align: middle !important;">{foreach admin_list as
+		$k1=>$v1}{if
+		$v1.admin_id==$v.jiedfzr}{$v1.admin_realname}{/if}{/foreach}
+	</td>
+	<td class="" style=" vertical-align: middle !important;">
+		{$v.fabsj|msubstr=0,10,'utf-8',false}
+	</td>
+	<td class="" style=" vertical-align: middle !important;">
+		{$v.yaoqwcsj|msubstr=0,10,'utf-8',false}
+	</td>
+    <td class="" style=" vertical-align: middle !important;">
+        {foreach cp_list as $k1=>$v1}
+        {if $v.chanp_id != 0 && $v1.chanpid == $v.chanp_id}{$v1.chanpmc}{/if}
+        {/foreach}
+    </td>
+    <td class="" style=" vertical-align: middle !important;">
+        {foreach xm_list as $k1=>$v1}
+        {if $v.xiangm_id != 0 && $v1.xiangmid == $v.xiangm_id}{$v1.xiangmmc}{/if}
+        {/foreach}
+    </td>
+    <td class="" style=" vertical-align: middle !important;">
+        {if $v.mk_name != ''}{$v.mk_name|subtext=8}{/if}
+    </td>
+	<!--<td style=" vertical-align: middle !important;">
+		{if condition="$v['shbz'] eq 0"}
+		<a class="red shenhe-btn" href="{:url('admin/Task/verify_state')}" data-id="{$v.renwid}"
+		   title="未审核">
+			<div>
+				<button class="btn btn-minier btn-danger">未审核</button>
+			</div>
+		</a>
+		{else/}
+		<a class="red shenhe-btn" href="{:url('admin/Task/verify_state')}" data-id="{$v.renwid}"
+		   title="已审核">
+			<div>
+				<button class="btn btn-minier btn-yellow">已审核</button>
+			</div>
+		</a>
+		{/if}
+	</td>-->
+</tr>
+{/foreach}
+<tr>
+	<td colspan="13" align="right">{$page}</td>
+</tr>
+<!--按照合适的值，自动改变颜色-->
+<script>
+	var trList = $("#ajax-data").children("tr");
+	for (var i=0;i<trList.length;i++) {
+		var tdArr = trList.eq(i).find("td");
+		var lz = tdArr.eq(3).text();//为当前状态
+		var jb = tdArr.eq(2).text();//为级别
+		var b = '流转';
+		var a = '最高';
+		var c = '很高';
+		var d = '高';
+		lz = $.trim(lz);  //过滤掉空格
+		jb = $.trim(jb);  //过滤掉空格
+		if(lz == b){
+			tdArr.eq(3).css('color','blue');
+		}
+		if(a == jb || c == jb || d == jb){  //高、很高、最高显示为红色
+			tdArr.eq(2).css('color','red');
+		}
+
+	}
+</script>

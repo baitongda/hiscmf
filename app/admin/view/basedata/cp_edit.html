@@ -1,0 +1,102 @@
+{extend name="admin@public/base" /}
+{block name="main-content"}
+	<div class="page-content">
+
+
+
+		<!--主题-->
+		<div class="page-header">
+			<h1>
+				您当前操作
+				<small>
+					<i class="ace-icon fa fa-angle-double-right"></i>
+					修改产品信息
+				</small>
+			</h1>
+		</div>
+
+
+		<div class="row">
+			<div class="col-xs-12">
+				<form class="form-horizontal" name="cp_list_edit" method="post" action="{:url('admin/Basedata/cp_runedit')}">
+					<input name="chanpid" id="chanpid" type="hidden" value="{$cplist['chanpid']}" />
+					<div class="form-group">
+						<label class="col-sm-2 control-label no-padding-right"> 项目名称：  </label>
+						<div class="col-sm-10">
+							<input type="text" name="chanpmc" id="chanpmc" placeholder="输入产品名称" class="col-xs-10 col-sm-5" value="{$cplist['chanpmc']}"/>
+						</div>
+					</div>
+					<div class="space-4"></div>
+					<!--引入拼音插件-->
+					<script src="__PUBLIC__/yfcmf/pinyin_dict_firstletter.js"></script>
+					<script src="__PUBLIC__/yfcmf/pinyinUtil.js"></script>
+					<script type="text/javascript">
+						$("#chanpmc").bind("input propertychange",function(){
+							//实时的获取输入的文字
+							var a = $(this).val();
+							var pinym = pinyinUtil.getFirstLetter(a,false);
+							$("#pinym").attr('value',pinym);
+						});
+					</script>
+					<div class="space-4"></div>
+					<!--保留项目编码-->
+					<!--<div class="form-group">
+                        <label class="col-sm-2 control-label no-padding-right"> 项目编号：  </label>
+                        <div class="col-sm-10">
+                            <input type="text" name="xiangmbm" id="xiangmbm" placeholder="输入项目编号" class="col-xs-10 col-sm-5"/>
+                            <span class="lbl col-xs-12 col-sm-7"><span class="red">*</span>现在还不用,允许为空</span>
+                        </div>
+                    </div>
+                    <div class="space-4"></div>-->
+
+					<div class="form-group">
+						<label class="col-sm-2 control-label no-padding-right"> 产品经理：  </label>
+						<div class="col-sm-10">
+							<select name="chanpjl"  class="col-sm-5" required>
+								<option value="0">请选择经理</option>
+								{foreach name="admin_list" item="v"}
+								<option value="{$v['admin_id']}" {if $v['admin_id'] ==$cplist['chanpjl']} selected{/if}>{$v['admin_realname']}</option>
+								{/foreach}
+							</select>
+						</div>
+					</div>
+
+					<div class="space-4"></div>
+
+					<div class="form-group">
+						<label class="col-sm-2 control-label no-padding-right"> 产品建立日期：  </label>
+						<div class="col-sm-10">
+							<input type="text" name="lixrq" id="lixrq" class="col-xs-10 col-sm-5" readonly="readonly" value="{$cplist['lixrq']}"/>
+						</div>
+					</div>
+					<div class="space-4"></div>
+
+					<div class="form-group">
+						<label class="col-sm-2 control-label no-padding-right"> 拼音码：  </label>
+						<div class="col-sm-10">
+							<input type="text" name="pinym" id="pinym" class="col-xs-10 col-sm-5" readonly="readonly" value="{$cplist['pinym']}"/>
+							<span class="lbl col-xs-12 col-sm-7"><span class="red">*</span>自动生成，不用编辑</span>
+						</div>
+					</div>
+					<div class="space-4"></div>
+
+					<div class="clearfix form-actions">
+						<div class="col-md-offset-3 col-md-9">
+							<button class="btn btn-info" type="submit">
+								<i class="ace-icon fa fa-check bigger-110"></i>
+								保存
+							</button>
+
+							&nbsp; &nbsp; &nbsp;
+							<button class="btn" type="reset">
+								<i class="ace-icon fa fa-undo bigger-110"></i>
+								重置
+							</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+
+	</div><!-- /.page-content -->
+{/block}
