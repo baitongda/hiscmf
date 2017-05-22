@@ -14,7 +14,7 @@ define('HTTP_URL','http://localhost/hiscmf');
 define('ADMIN_URL',HTTP_URL.'/index.php/admin/');
 //定义一个绝对路径
 //define('ABS_PUBLIC_URL','/var/www/html/hiscmf/public/DataTables/');
-define('ABS_PUBLIC_URL','G:\\wamp64\\www\\HisCMF\\public\\DataTables\\');
+//define('ABS_PUBLIC_URL','G:\\wamp64\\www\\HisCMF\\public\\DataTables\\');
 
 //绑定admin模块
 //define('BIND_MODULE','admin');
